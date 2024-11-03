@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'websocket-client-simple'
+require 'chromate/helpers'
 
 module Chromate
   class Client
+    include Helpers
+
     def self.listeners
       @@listeners ||= [] # rubocop:disable Style/ClassVars
     end
@@ -86,24 +89,21 @@ module Chromate
       @callbacks.delete(message['id'])
     end
 
-    # Permet aux différentes parties de s'abonner aux messages WebSocket
+    # Allowing different parts to subscribe to WebSocket messages
     def on_message(&block)
       Client.listeners << block
     end
 
     def fetch_websocket_debug_url
-      # Récupérer la liste des cibles disponibles
       uri = URI("http://localhost:#{@port}/json/list")
       response = Net::HTTP.get(uri)
       targets = JSON.parse(response)
 
-      # Trouver une cible de type 'page'
       page_target = targets.find { |target| target['type'] == 'page' }
 
       if page_target
         page_target['webSocketDebuggerUrl']
       else
-        # Créer une nouvelle cible de page si aucune n'est disponible
         create_new_page_target
       end
     end
@@ -114,15 +114,7 @@ module Chromate
       response = Net::HTTP.get(uri)
       new_target = JSON.parse(response)
 
-      # Retourner l'URL WebSocket de la nouvelle page
       new_target['webSocketDebuggerUrl']
-    end
-
-    def find_available_port
-      server = TCPServer.new('127.0.0.1', 0)
-      port = server.addr[1]
-      server.close
-      port
     end
   end
 end
