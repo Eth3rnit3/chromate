@@ -214,5 +214,41 @@ RSpec.describe Chromate::Client do
   end
 
   describe '#fetch_websocket_debug_url' do
+    let(:ws) { instance_double(WebSocket::Client::Simple::Client) }
+
+    context 'when page targets are available' do
+      before do
+        allow(WebSocket::Client::Simple).to receive(:connect).with('ws://localhost:9222/json/version').and_return(ws)
+        allow(ws).to receive(:on).with(:message)
+        allow(ws).to receive(:on).with(:open)
+        allow(ws).to receive(:on).with(:error)
+        allow(ws).to receive(:on).with(:close)
+        allow(ws).to receive(:send)
+        allow(ws).to receive(:close)
+        allow(Net::HTTP).to receive(:get).with(URI('http://localhost:8627/json/list')).and_return('[{"description":"","devtoolsFrontendUrl":"/devtools/inspector.html?ws=localhost:8627/devtools/page/1","id":"1","title":"about:blank","type":"page","url":"about:blank","webSocketDebuggerUrl":"ws://localhost:8627/devtools/page/1"}]')
+      end
+
+      it 'returns the WebSocket URL' do
+        expect(client.fetch_websocket_debug_url).to eq('ws://localhost:8627/devtools/page/1')
+      end
+    end
+
+    context 'when page targets are not available' do
+      before do
+        allow(WebSocket::Client::Simple).to receive(:connect).with('ws://localhost:9222/json/version').and_return(ws)
+        allow(ws).to receive(:on).with(:message)
+        allow(ws).to receive(:on).with(:open)
+        allow(ws).to receive(:on).with(:error)
+        allow(ws).to receive(:on).with(:close)
+        allow(ws).to receive(:send)
+        allow(ws).to receive(:close)
+        allow(Net::HTTP).to receive(:get).with(URI('http://localhost:8627/json/list')).and_return('[]')
+        allow(client).to receive(:create_new_page_target).and_return('ws://localhost:8627/devtools/page/1')
+      end
+
+      it 'creates a new page target' do
+        expect(client.fetch_websocket_debug_url).to eq('ws://localhost:8627/devtools/page/1')
+      end
+    end
   end
 end
