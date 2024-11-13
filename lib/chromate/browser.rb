@@ -81,7 +81,7 @@ module Chromate
       Process.kill('TERM', @process)        if @process
       Process.kill('TERM', @record_process) if @record_process
       Process.kill('TERM', @xfvb_process)   if @xfvb_process
-      @client&.close
+      @client&.stop
     end
 
     def native_control?
