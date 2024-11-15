@@ -12,7 +12,7 @@ module Chromate
       end
 
       # @return [self]
-      def wait_for_page_load
+      def wait_for_page_load # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
         page_loaded = false
         dom_content_loaded = false
         frame_stopped_loading = false

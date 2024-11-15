@@ -6,10 +6,10 @@ require 'chromate/c_logger'
 module Support
   module Server
     def start_servers
-      directories = Dir['spec/apps/*'].select { |entry| File.directory?(entry) }
-      ports = (3000..4000).to_a
-      @@servers = []
-      @@server_urls = {}
+      directories   = Dir['spec/apps/*'].select { |entry| File.directory?(entry) }
+      ports         = (12_500..12_800).to_a
+      @@servers     = [] # rubocop:disable Style/ClassVars
+      @@server_urls = {} # rubocop:disable Style/ClassVars
 
       directories.each_with_index do |directory, index|
         port = ports[index]
@@ -33,8 +33,6 @@ module Support
       trap('INT') { properly_exit }
       # Stop servers when the test suite is stopped
       trap('TERM') { properly_exit }
-      # Stop servers when the test suite is done
-      at_exit { properly_exit }
 
       true
     end
@@ -51,18 +49,14 @@ module Support
       stop_servers
     rescue StandardError => e
       Chromate::CLogger.log("Error stopping servers: #{e.message}")
-    ensure
-      exit
+      exit(1)
     end
 
     def stop_servers
       @@servers.each do |entry|
         entry[:server].shutdown
-        entry[:thread].kill if entry[:thread].alive?
-        Chromate::CLogger.log("Server stopped for port #{entry[:server].config[:Port]}")
+        entry[:thread].join if entry[:thread].alive?
       end
-
-      true
     end
   end
 end

@@ -15,12 +15,12 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.before(:suite) do |example|
+  config.before(:suite) do |_example|
     Chromate::CLogger.log('Starting test servers')
     start_servers
   end
 
-  config.after(:suite) do |example|
+  config.after(:suite) do |_example|
     Chromate::CLogger.log('Stopping test servers')
     stop_servers
   end
