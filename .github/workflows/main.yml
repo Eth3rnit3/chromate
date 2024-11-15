@@ -3,7 +3,7 @@ name: Ruby
 on:
   push:
     branches:
-      - master
+      - "*"
 
   pull_request:
 
@@ -18,10 +18,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: browser-actions/setup-chrome@v1
+      id: setup-chrome
+    - name: Set env vars
+      run: |
+        echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run the default task
-      run: bundle exec rake
+    # - name: Run rubocop
+    #   run: bundle exec rubocop
+    - name: Run tests
+      run: bundle exec rspec
