@@ -1,9 +1,9 @@
 # Chromate
-[![eth3rnit3 - chromate](https://img.shields.io/static/v1?label=eth3rnit3&message=chromate&color=red&logo=github)](https://github.com/eth3rnit3/chromate "Go to GitHub repo")
-[![GitHub release](https://img.shields.io/github/release/eth3rnit3/chromate?include_prereleases=&sort=semver&color=red)](https://github.com/eth3rnit3/chromate/releases/)
+[![eth3rnit3 - chromate](https://img.shields.io/static/v1?label=eth3rnit3&message=chromate&color=a8a9ad&logo=ruby&labelColor=9b111e)](https://github.com/eth3rnit3/chromate "Go to GitHub repo")
+[![GitHub release](https://img.shields.io/github/release/eth3rnit3/chromate?include_prereleases=&sort=semver&color=a8a9ad)](https://github.com/eth3rnit3/chromate/releases/)
+[![License](https://img.shields.io/badge/License-MIT-a8a9ad)](#license)
 [![Ruby](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml/badge.svg)](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml)
 [![issues - chromate](https://img.shields.io/github/issues/eth3rnit3/chromate)](https://github.com/eth3rnit3/chromate/issues)
-[![License](https://img.shields.io/badge/License-MIT-red)](#license)
 
 ![logo](logo.png)
 
