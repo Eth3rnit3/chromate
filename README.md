@@ -5,6 +5,8 @@
 [![issues - chromate](https://img.shields.io/github/issues/eth3rnit3/chromate)](https://github.com/eth3rnit3/chromate/issues)
 [![License](https://img.shields.io/badge/License-MIT-red)](#license)
 
+![logo](logo.png)
+
 Chromate is a custom driver for Chrome using the Chrome DevTools Protocol (CDP) to create undetectable bots with human-like behavior. The ultimate goal is to enable the creation of AI agents capable of navigating and performing actions on the web on behalf of the user. This gem is the first step towards achieving that goal.
 
 ## Installation
