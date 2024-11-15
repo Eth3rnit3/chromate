@@ -1,43 +1,119 @@
 # Chromate
 
-TODO: Delete this and the text below, and describe your gem
+[![Ruby](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml/badge.svg)](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/chromate`. To experiment with that code, run `bin/console` for an interactive prompt.
+Chromate is a custom driver for Chrome using the Chrome DevTools Protocol (CDP) to create undetectable bots with human-like behavior. The ultimate goal is to enable the creation of AI agents capable of navigating and performing actions on the web on behalf of the user. This gem is the first step towards achieving that goal.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add gem to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```sh
+bundle add chromate
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install it yourself as:
 
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```sh
+gem install chromate
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+### Basic Example
 
-## Development
+```ruby
+require 'chromate'
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+browser = Chromate::Browser.new # default headless: true
+browser.start
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+url = 'http://example.com'
+browser.navigate_to(url)
+browser.find_element('#some-element').click
+browser.screenshot_to_file('screenshot.png')
 
-## Contributing
+browser.stop
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/chromate. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/chromate/blob/master/CODE_OF_CONDUCT.md).
+### Configuration
+
+You can configure Chromate using a block:
+
+```ruby
+Chromate.configure do |config|
+  config.user_data_dir = '/path/to/user/data'
+  config.headless = true
+  config.native_control = true
+  config.proxy = { host: 'proxy.example.com', port: 8080 }
+end
+```
+
+## Principle of Operation
+
+Chromate leverages the Chrome DevTools Protocol (CDP) to interact with the browser. It provides a custom driver that mimics human-like behavior to avoid detection by anti-bot systems. The gem includes native mouse controllers for macOS and Linux, which do not trigger JavaScript events, making interactions more human-like.
+
+### Features
+
+- **Headless Mode**: Run Chrome without a graphical user interface.
+- **Native Mouse Control**: Use native mouse events for macOS and Linux.
+- **Screenshot Capture**: Capture screenshots of the browser window.
+- **Form Interaction**: Fill out and submit forms.
+- **Shadow DOM Support**: Interact with elements inside Shadow DOM.
+- **Element Interaction**: Click, hover, and type text into elements.
+- **Navigation**: Navigate to URLs and wait for page load.
+- **Docker xvfb Support**: Dockerfile provided with xvfb setup for easy usage.
+
+### Limitations
+
+- **Windows Support**: Native mouse control is not yet supported on Windows.
+- **Headless Mode Complexity**: Requires xvfb for headless mode, adding complexity due to different proportions.
+- **Anti-Bot Detection**: Current systems can detect keyboard and mouse interactions via CDP.
+
+# Native controls and headless
+
+Chromate provides native mouse control for macOS and Linux, which helps in creating more human-like interactions that are harder to detect by anti-bot systems. However, using native controls in headless mode requires additional setup, such as using xvfb (X Virtual Framebuffer) to simulate a display.
+
+## Docker Setup
+
+To simplify the setup process, Chromate includes a Dockerfile and an entrypoint script that handle the installation and configuration of necessary dependencies, including xvfb.
+
+### Dockerfile
+
+The Dockerfile sets up a minimal environment with all the necessary dependencies to run Chromate in headless mode with xvfb. It installs Chrome, xvfb, and other required libraries.
+
+The [entrypoint](dockerfiles/docker-entrypoint.sh) script ensures that xvfb is running before starting the main process. It removes any existing lock files, starts xvfb and a window manager (fluxbox), and waits for xvfb to initialize.
+
+### Example Docker Usage
+
+Here is an example of how you can use Chromate inside a Docker container:
+
+```sh
+# Build the Docker image
+docker build -f dockerfiles/Dockerfile -t chromate .
+
+# Run the Docker container
+docker run -v $(pwd):/app -it chromate
+
+# Inside the container, run your Ruby script
+ruby your_script.rb # or bundle exec rspec
+```
+
+This setup ensures that all necessary dependencies are installed and configured correctly, allowing you to focus on writing your automation scripts without worrying about the underlying environment.
+
+## Contribution
+
+Contributions are welcome! If you have suggestions for improvements or new features, please open an issue or submit a pull request on GitHub.
+
+### How to Contribute
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Create a new Pull Request.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Chromate project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/chromate/blob/master/CODE_OF_CONDUCT.md).
+Chromate is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
