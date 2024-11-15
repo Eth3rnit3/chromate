@@ -116,7 +116,10 @@ RSpec.describe Chromate::Configuration do
   end
 
   context 'when on an unsupported platform' do
-    before { allow(RbConfig::CONFIG).to receive(:[]).with('host_os').and_return('foo') }
+    before do
+      allow(RbConfig::CONFIG).to receive(:[]).with('host_os').and_return('foo')
+      allow(ENV).to receive(:[]).with('CHROME_BIN').and_return(nil)
+    end
 
     describe '#chrome_path' do
       it 'raises an exception' do
