@@ -1,0 +1,38 @@
+name: Gem Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '3.2.2'
+    if: github.event_name == 'release'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Build Gem
+        run: bundle exec rake build
+
+      - uses: fac/ruby-gem-setup-credentials-action@v2
+        with:
+          token: ${{ secrets.CI_TOKEN }}
+
+      - uses: fac/ruby-gem-push-action@v2
+        with:
+          key: github
+          pre-release: true

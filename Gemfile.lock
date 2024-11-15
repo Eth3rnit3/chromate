@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chromate (0.1.0)
+    chromate (0.0.1.pre)
       ffi (~> 1.17.0)
       websocket-client-simple (~> 0.8.0)
 

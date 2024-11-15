@@ -1,6 +1,9 @@
 # Chromate
-
+[![eth3rnit3 - chromate](https://img.shields.io/static/v1?label=eth3rnit3&message=chromate&color=red&logo=github)](https://github.com/eth3rnit3/chromate "Go to GitHub repo")
+[![GitHub release](https://img.shields.io/github/release/eth3rnit3/chromate?include_prereleases=&sort=semver&color=red)](https://github.com/eth3rnit3/chromate/releases/)
 [![Ruby](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml/badge.svg)](https://github.com/Eth3rnit3/chromate/actions/workflows/main.yml)
+[![issues - chromate](https://img.shields.io/github/issues/eth3rnit3/chromate)](https://github.com/eth3rnit3/chromate/issues)
+[![License](https://img.shields.io/badge/License-MIT-red)](#license)
 
 Chromate is a custom driver for Chrome using the Chrome DevTools Protocol (CDP) to create undetectable bots with human-like behavior. The ultimate goal is to enable the creation of AI agents capable of navigating and performing actions on the web on behalf of the user. This gem is the first step towards achieving that goal.
 
@@ -19,6 +22,8 @@ gem install chromate
 ```
 
 ## Usage
+
+[![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](/docs/ "Go to project documentation")
 
 ### Basic Example
 
@@ -116,4 +121,4 @@ Contributions are welcome! If you have suggestions for improvements or new featu
 
 ## License
 
-Chromate is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Released under [MIT](/LICENSE.txt) by [@eth3rnit3](https://github.com/eth3rnit3).
