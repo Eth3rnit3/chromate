@@ -75,8 +75,10 @@ RSpec.describe Chromate::Configuration do
     end
 
     describe '#chrome_path' do
+      let(:path) { ENV.fetch('CHROME_BIN', '/usr/bin/google-chrome-stable') }
+
       it 'returns the path to chrome' do
-        expect(config.chrome_path).to eq '/usr/bin/google-chrome-stable'
+        expect(config.chrome_path).to eq path
       end
     end
   end
@@ -89,8 +91,10 @@ RSpec.describe Chromate::Configuration do
     end
 
     describe '#chrome_path' do
+      let(:path) { ENV.fetch('CHROME_BIN', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome') }
+
       it 'returns the path to chrome' do
-        expect(config.chrome_path).to eq '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        expect(config.chrome_path).to eq path
       end
     end
   end
@@ -103,8 +107,10 @@ RSpec.describe Chromate::Configuration do
     end
 
     describe '#chrome_path' do
+      let(:path) { ENV.fetch('CHROME_BIN', 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe') }
+
       it 'returns the path to chrome' do
-        expect(config.chrome_path).to eq 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+        expect(config.chrome_path).to eq path
       end
     end
   end
