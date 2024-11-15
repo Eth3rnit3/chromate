@@ -33,8 +33,6 @@ module Support
       trap('INT') { properly_exit }
       # Stop servers when the test suite is stopped
       trap('TERM') { properly_exit }
-      # Stop servers when the test suite is done
-      at_exit { properly_exit }
 
       true
     end
@@ -51,18 +49,14 @@ module Support
       stop_servers
     rescue StandardError => e
       Chromate::CLogger.log("Error stopping servers: #{e.message}")
-    ensure
-      exit
+      exit(1)
     end
 
-    def stop_servers(status = 0)
+    def stop_servers
       @@servers.each do |entry|
         entry[:server].shutdown
         entry[:thread].join if entry[:thread].alive?
-        Chromate::CLogger.log("Server stopped for port #{entry[:server].config[:Port]}")
       end
-
-      exit(status)
     end
   end
 end
