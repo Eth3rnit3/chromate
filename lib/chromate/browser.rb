@@ -44,7 +44,6 @@ module Chromate
     end
 
     def start
-      # start_x_server if @xfvb && (linux? || mac?)
       start_video_recording if @record
 
       @client = Client.new(self)
@@ -89,20 +88,6 @@ module Chromate
     end
 
     private
-
-    def start_x_server
-      if linux?
-        # Start Xvfb on display :99
-        @xfvb_process = spawn('Xvfb :99 -screen 0 1920x1080x24 &')
-        ENV['DISPLAY'] = ':99'
-        sleep 1 # Wait for Xvfb to start
-      elsif mac?
-        # Start XQuartz
-        system('open -a XQuartz')
-        ENV['DISPLAY'] = ':0'
-        sleep 2 # Wait for XQuartz to start
-      end
-    end
 
     def start_video_recording
       outfile = File.join(Dir.pwd, "output_video_#{Time.now.to_i}.mp4")

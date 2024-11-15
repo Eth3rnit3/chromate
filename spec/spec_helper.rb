@@ -22,6 +22,8 @@ RSpec.configure do |config|
 
   config.after(:suite) do |example|
     Chromate::CLogger.log('Stopping test servers')
+    return stop_servers(1) if RSpec.world.filtered_examples.values.flatten.any?(&:exception)
+
     stop_servers
   end
 end

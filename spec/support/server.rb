@@ -6,10 +6,10 @@ require 'chromate/c_logger'
 module Support
   module Server
     def start_servers
-      directories = Dir['spec/apps/*'].select { |entry| File.directory?(entry) }
-      ports = (3000..4000).to_a
-      @@servers = []
-      @@server_urls = {}
+      directories   = Dir['spec/apps/*'].select { |entry| File.directory?(entry) }
+      ports         = (12_500..12_800).to_a
+      @@servers     = [] # rubocop:disable Style/ClassVars
+      @@server_urls = {} # rubocop:disable Style/ClassVars
 
       directories.each_with_index do |directory, index|
         port = ports[index]
@@ -55,14 +55,14 @@ module Support
       exit
     end
 
-    def stop_servers
+    def stop_servers(status = 0)
       @@servers.each do |entry|
         entry[:server].shutdown
-        entry[:thread].kill if entry[:thread].alive?
+        entry[:thread].join if entry[:thread].alive?
         Chromate::CLogger.log("Server stopped for port #{entry[:server].config[:Port]}")
       end
 
-      true
+      exit(status)
     end
   end
 end
