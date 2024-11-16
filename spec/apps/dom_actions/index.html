@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chromate Actions Test Page</title>
+<style>
+  .hover-highlight:hover {
+    background-color: #ffeb3b;
+  }
+</style>
+</head>
+<body>
+
+<h1>Chromate Actions Test Page</h1>
+
+<!-- Test de click_element -->
+<button id="click-button">Click Me</button>
+<p id="click-result">Button not clicked yet</p>
+
+<!-- Test de hover_element -->
+<div id="hover-box" class="hover-highlight" style="width: 200px; height: 100px; border: 1px solid #000;">
+  Hover over me
+</div>
+
+<!-- Test de type_text et press_enter -->
+<form id="test-form">
+  <input type="text" id="input-text" placeholder="Type something...">
+  <button type="submit">Submit</button>
+</form>
+<p id="input-result">No input yet</p>
+
+<!-- Test de get_text et get_property -->
+<p id="text-element" data-info="Test property">This is a text element</p>
+
+<!-- Test de select_option -->
+<select id="test-select">
+  <option value="">Choose an option</option>
+  <option value="option1">Option 1</option>
+  <option value="option2">Option 2</option>
+  <option value="option3">Option 3</option>
+</select>
+<p id="select-result">No option selected</p>
+
+<!-- Script JavaScript pour gérer les interactions -->
+<script>
+  document.getElementById('click-button').addEventListener('click', () => {
+    document.getElementById('click-result').innerText = 'Button clicked!';
+  });
+
+  document.getElementById('test-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const inputValue = document.getElementById('input-text').value;
+    document.getElementById('input-result').innerText = `Input submitted: ${inputValue}`;
+  });
+
+  document.getElementById('test-select').addEventListener('change', (event) => {
+    const selectedOption = event.target.value;
+    document.getElementById('select-result').innerText = `Selected option: ${selectedOption}`;
+  });
+</script>
+
+</body>
+</html>

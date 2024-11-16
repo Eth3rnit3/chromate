@@ -116,6 +116,21 @@ module Chromate
       self
     end
 
+    def press_key(key = 'Enter')
+      client.send_message(
+        'Runtime.evaluate',
+        expression: "document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {key: '#{key}'}));"
+      )
+      client.send_message(
+        'Runtime.evaluate',
+        expression: "document.activeElement.dispatchEvent(new KeyboardEvent('keyup', {key: '#{key}'}));"
+      )
+    end
+
+    def press_enter
+      press_key('Enter')
+    end
+
     # @param [String] selector
     # @return [Chromate::Element]
     def find_element(selector)
