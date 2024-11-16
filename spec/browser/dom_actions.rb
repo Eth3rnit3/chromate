@@ -39,7 +39,6 @@ RSpec.describe 'Dom actions' do
     expect(result.text).to eq('No input yet')
 
     input.press_enter
-    result = browser.find_element('#input-result')
     expect(result.text).to eq('Input submitted: Testing Chromate')
   end
 

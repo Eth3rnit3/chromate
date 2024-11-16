@@ -37,7 +37,16 @@ module Chromate
       # @param selector [String] CSS selector
       # @return [String]
       def evaluate_script(script)
-        @client.send_message('Runtime.evaluate', expression: script)
+        result = @client.send_message('Runtime.evaluate', expression: script)
+
+        case result['result']['type']
+        when 'string', 'number', 'boolean'
+          result['result']['value']
+        when 'object'
+          result['result']['objectId']
+        else
+          result['result']
+        end
       end
     end
   end

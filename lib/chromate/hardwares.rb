@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'chromate/c_logger'
+require 'chromate/hardwares/keyboard_controller'
 require 'chromate/hardwares/mouse_controller'
 require 'chromate/hardwares/mouses/virtual_controller'
+require 'chromate/hardwares/keyboards/virtual_controller'
 require 'chromate/helpers'
 
 module Chromate
@@ -29,5 +31,11 @@ module Chromate
       end
     end
     module_function :mouse
+
+    def keyboard(**args)
+      Chromate::CLogger.log('⌨️ Loading Virtual keyboard controller')
+      Keyboards::VirtualController.new(**args)
+    end
+    module_function :keyboard
   end
 end

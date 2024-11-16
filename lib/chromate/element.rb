@@ -13,7 +13,7 @@ module Chromate
         super("Unable to resolve element with selector: #{selector}")
       end
     end
-    attr_reader :selector, :client, :mouse
+    attr_reader :selector, :client
 
     # @param [String] selector
     # @param [Chromate::Client] client
@@ -26,36 +26,41 @@ module Chromate
       @object_id  = object_id
       @node_id    = node_id
       @object_id, @node_id = find(selector, root_id) unless @object_id && @node_id
-      @root_id  = root_id || document['root']['nodeId']
-      @mouse    = Hardwares.mouse(client: client, element: self)
+      @root_id = root_id || document['root']['nodeId']
     end
 
+    # @return [Chromate::Hardwares::MouseController]
+    def mouse
+      @mouse ||= Hardwares.mouse(client: client, element: self)
+    end
+
+    # @return [Chromate::Hardwares::KeyboardController]
+    def keyboard
+      @keyboard ||= Hardwares.keyboard(client: client, element: self)
+    end
+
+    # @return [String]
     def inspect
       value = selector.length > 20 ? "#{selector[0..20]}..." : selector
       "#<Chromate::Element:#{value}>"
     end
 
+    # @return [String]
     def text
-      return @text if @text
-
       result = client.send_message('Runtime.callFunctionOn', functionDeclaration: 'function() { return this.innerText; }', objectId: @object_id)
-      @text = result['result']['value']
+      result['result']['value']
     end
 
     # @return [String]
     def html
-      return @html if @html
-
-      @html = client.send_message('DOM.getOuterHTML', objectId: @object_id)
-      @html = @html['outerHTML']
+      html = client.send_message('DOM.getOuterHTML', objectId: @object_id)
+      html['outerHTML']
     end
 
     # @return [Hash]
     def attributes
-      return @attributes if @attributes
-
       result = client.send_message('DOM.getAttributes', nodeId: @node_id)
-      @attributes = Hash[*result['attributes']]
+      Hash[*result['attributes']]
     end
 
     # @param [String] name
@@ -95,6 +100,13 @@ module Chromate
     end
 
     # @return [self]
+    def focus
+      client.send_message('DOM.focus', nodeId: @node_id)
+
+      self
+    end
+
+    # @return [self]
     def click
       mouse.click
 
@@ -109,26 +121,20 @@ module Chromate
     end
 
     # @param [String] text
+    # @return [self]
     def type(text)
-      client.send_message('Runtime.callFunctionOn', functionDeclaration: "function(value) { this.value = value; this.dispatchEvent(new Event('input')); }",
-                                                    objectId: @object_id, arguments: [{ value: text }])
+      focus
+      keyboard.type(text)
 
       self
     end
 
-    def press_key(key = 'Enter')
-      client.send_message(
-        'Runtime.evaluate',
-        expression: "document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {key: '#{key}'}));"
-      )
-      client.send_message(
-        'Runtime.evaluate',
-        expression: "document.activeElement.dispatchEvent(new KeyboardEvent('keyup', {key: '#{key}'}));"
-      )
-    end
-
+    # @return [self]
     def press_enter
-      press_key('Enter')
+      keyboard.press_key('Enter')
+      submit_parent_form
+
+      self
     end
 
     # @param [String] selector
@@ -186,6 +192,8 @@ module Chromate
 
     private
 
+    # @param [String] event
+    # @return [void]
     def dispatch_event(event)
       client.send_message('DOM.dispatchEvent', nodeId: @node_id, type: event)
     end
@@ -204,6 +212,27 @@ module Chromate
 
     def document
       @document ||= client.send_message('DOM.getDocument')
+    end
+
+    def submit_parent_form
+      script = <<~JAVASCRIPT
+        function() {
+          const form = this.closest('form');
+          if (form) {
+            const submitEvent = new Event('submit', {
+              bubbles: true,
+              cancelable: true
+            });
+            if (form.dispatchEvent(submitEvent)) {
+              form.submit();
+            }
+          }
+        }
+      JAVASCRIPT
+
+      client.send_message('Runtime.callFunctionOn',
+                          functionDeclaration: script,
+                          objectId: @object_id)
     end
   end
 end
