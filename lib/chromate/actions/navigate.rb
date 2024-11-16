@@ -17,11 +17,11 @@ module Chromate
         dom_content_loaded = false
         frame_stopped_loading = false
 
-        # Utiliser un Mutex pour la synchronisation
+        # Use Mutex for synchronization
         mutex = Mutex.new
         condition = ConditionVariable.new
 
-        # S'abonner aux messages WebSocket
+        # Subscribe to websocket messages
         listener = proc do |message|
           mutex.synchronize do
             case message['method']
@@ -40,15 +40,14 @@ module Chromate
 
         @client.on_message(&listener)
 
-        # Attendre les trois événements (DOMContent, Load et FrameStoppedLoading) avec un timeout
+        # Wait for all three events (DOMContent, Load and FrameStoppedLoading) with a timeout
         Timeout.timeout(15) do
           mutex.synchronize do
             condition.wait(mutex) until dom_content_loaded && page_loaded && frame_stopped_loading
           end
         end
 
-        # Nettoyer l'écouteur WebSocket
-        @client.on_message { |msg| } # Supprime tous les anciens écouteurs en ajoutant un listener vide
+        @client.on_message { |msg| } # Remove listener
 
         self
       end
