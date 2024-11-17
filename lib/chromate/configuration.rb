@@ -15,6 +15,7 @@ module Chromate
       '--disable-extensions',
       '--disable-infobars',
       '--no-sandbox',
+      '--test-type',
       '--disable-popup-blocking',
       '--ignore-certificate-errors',
       '--disable-gpu',
@@ -27,7 +28,8 @@ module Chromate
       '--window-position=2400,2400'
     ].freeze
     XVFB_ARGS = [
-      '--window-position=0,0'
+      '--window-position=0,0',
+      '--start-fullscreen'
     ].freeze
     DISABLED_FEATURES = %w[
       Translate

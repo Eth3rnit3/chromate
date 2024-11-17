@@ -91,4 +91,9 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD [ "bash" ]
 
 # docker build -f dockerfiles/Dockerfile -t chromate .
+
+# Run the container for testing chromate
 # docker run -v $(pwd)/docker_root:/app -it chromate
+
+# Run the container for development
+# docker run -v $(pwd):/app -it chromate
