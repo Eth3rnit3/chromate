@@ -3,10 +3,20 @@
 module Chromate
   module Actions
     module Screenshot
-      def screenshot_to_file(file_path, options = {})
-        image_data = screenshot(options)
+      def screenshot(file_path = "#{Time.now.to_i}.png", options = {})
+        return xvfb_screenshot(file_path) if @xfvb
+        return screenshot_full_page(file_path, options) if options.delete(:full_page)
+
+        image_data = make_screenshot(options)
         File.binwrite(file_path, image_data)
         true
+      end
+
+      private
+
+      def xvfb_screenshot(file_path)
+        display = ENV['DISPLAY'] || ':99'
+        system("xwd -root -display #{display} | convert xwd:- #{file_path}")
       end
 
       def screenshot_full_page(file_path, options = {})
@@ -23,20 +33,13 @@ module Chromate
                                deviceScaleFactor: 1
                              })
 
-        screenshot_to_file(file_path, options)
+        screenshot(file_path, options)
 
         @client.send_message('Emulation.clearDeviceMetricsOverride')
         true
       end
 
-      def xvfb_screenshot(file_path)
-        display = ENV['DISPLAY'] || ':99'
-        system("xwd -root -display #{display} | convert xwd:- #{file_path}")
-      end
-
-      private
-
-      def screenshot(options = {})
+      def make_screenshot(options = {})
         default_options = {
           format: 'png',
           fromSurface: true

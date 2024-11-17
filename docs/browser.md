@@ -92,42 +92,20 @@ Navigates back to the previous page in the browser history.
 
 ### Screenshot Methods (from `Actions::Screenshot`)
 
-#### `#screenshot_to_file(file_path, options = {})`
+#### `#screenshot(file_path, options = {})`
 
 Takes a screenshot of the current page and saves it to the specified file.
 
 - **Parameters:**
-  - `file_path` (String): The file path to save the screenshot.
+  - `file_path` (String, optional): The file path to save the screenshot.
   - `options` (Hash, optional): Additional options for the screenshot.
+  - - `full_page` (Boolean, optional): Take a full page screenshot
+
+It will call `#xvfb_screenshot` private method if `xvfb` mode is `true`
 
 - **Example:**
   ```ruby
-  browser.screenshot_to_file('screenshot.png')
-  ```
-
-#### `#screenshot_full_page(file_path, options = {})`
-
-Takes a full-page screenshot and saves it to the specified file.
-
-- **Parameters:**
-  - `file_path` (String): The file path to save the full-page screenshot.
-  - `options` (Hash, optional): Additional options for the screenshot.
-
-- **Example:**
-  ```ruby
-  browser.screenshot_full_page('full_page.png')
-  ```
-
-#### `#xvfb_screenshot(file_path)`
-
-Takes a screenshot using `Xvfb` (for Linux environments) and saves it to the specified file.
-
-- **Parameters:**
-  - `file_path` (String): The file path to save the screenshot.
-
-- **Example:**
-  ```ruby
-  browser.xvfb_screenshot('xvfb_screenshot.png')
+  browser.screenshot('screenshot.png')
   ```
 
 ### DOM Methods (from `Actions::Dom`)
@@ -235,7 +213,7 @@ browser = Chromate::Browser.new(options)
 
 browser.start
 browser.navigate_to('https://example.com')
-browser.screenshot_to_file('example.png')
+browser.screenshot('example.png')
 element = browser.find_element('#main-header')
 puts element.text
 browser.stop

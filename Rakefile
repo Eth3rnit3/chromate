@@ -30,7 +30,7 @@ namespace :chromate do
       browser.start
       browser.navigate_to("https://pixelscan.net")
       sleep 10
-      browser.screenshot_to_file("results/pixelscan.png")
+      browser.screenshot("results/pixelscan.png")
       browser.stop
     end
 
@@ -43,7 +43,7 @@ namespace :chromate do
       # browser.click_element("#clickHere")
       mouse = Chromate::Native::MouseController.new(browser.client)
       mouse.click(100, 100)
-      browser.screenshot_to_file("results/brotector.png")
+      browser.screenshot("results/brotector.png")
       browser.stop
     end
 
@@ -52,7 +52,7 @@ namespace :chromate do
       browser.start
       browser.navigate_to("https://bot.sannysoft.com")
       sleep 2
-      browser.screenshot_to_file("results/bot.png")
+      browser.screenshot("results/bot.png")
       browser.stop
     end
 
@@ -64,7 +64,7 @@ namespace :chromate do
       browser.start
       browser.navigate_to("https://2captcha.com/fr/demo/cloudflare-turnstile-challenge")
       sleep 10
-      browser.screenshot_to_file("results/cloudflare.png")
+      browser.screenshot("results/cloudflare.png")
       browser.stop
     end
   end

@@ -14,7 +14,7 @@ RSpec.describe 'Mouse' do
     browser.select_option('#gender', 'female')
     browser.find_element('#option-2').click
     browser.find_element('#submit-button').click
-    browser.screenshot_to_file('spec/apps/fill_form/form.png')
+    browser.screenshot('spec/apps/fill_form/form.png')
 
     browser.stop
     expect(File.exist?('spec/apps/fill_form/form.png')).to be true

@@ -10,7 +10,7 @@ RSpec.describe 'Mouse' do
     url = server_urls['where_clicked']
     browser.navigate_to(url)
     browser.click_element('#interactive-button')
-    browser.screenshot_to_file('spec/apps/where_clicked/click.png')
+    browser.screenshot('spec/apps/where_clicked/click.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_clicked/click.png')).to be true
@@ -22,7 +22,7 @@ RSpec.describe 'Mouse' do
     browser.navigate_to(url)
     browser.refresh
     browser.hover_element('#red')
-    browser.screenshot_to_file('spec/apps/where_moved/hover_element_red.png')
+    browser.screenshot('spec/apps/where_moved/hover_element_red.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_moved/hover_element_red.png')).to be true
@@ -34,7 +34,7 @@ RSpec.describe 'Mouse' do
     browser.navigate_to(url)
     browser.refresh
     browser.hover_element('#blue')
-    browser.screenshot_to_file('spec/apps/where_moved/hover_element_blue.png')
+    browser.screenshot('spec/apps/where_moved/hover_element_blue.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_moved/hover_element_blue.png')).to be true
@@ -46,7 +46,7 @@ RSpec.describe 'Mouse' do
     browser.navigate_to(url)
     browser.refresh
     browser.hover_element('#green')
-    browser.screenshot_to_file('spec/apps/where_moved/hover_element_green.png')
+    browser.screenshot('spec/apps/where_moved/hover_element_green.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_moved/hover_element_green.png')).to be true
@@ -58,7 +58,7 @@ RSpec.describe 'Mouse' do
     browser.navigate_to(url)
     browser.refresh
     browser.hover_element('#yellow')
-    browser.screenshot_to_file('spec/apps/where_moved/hover_element_yellow.png')
+    browser.screenshot('spec/apps/where_moved/hover_element_yellow.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_moved/hover_element_yellow.png')).to be true
@@ -73,7 +73,7 @@ RSpec.describe 'Mouse' do
     browser.hover_element('#yellow')
     browser.hover_element('#green')
     browser.hover_element('#blue')
-    browser.screenshot_to_file('spec/apps/where_moved/hover_element_all.png')
+    browser.screenshot('spec/apps/where_moved/hover_element_all.png')
 
     browser.stop
     expect(File.exist?('spec/apps/where_moved/hover_element_all.png')).to be true

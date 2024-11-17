@@ -38,7 +38,7 @@ browser.start
 url = 'http://example.com'
 browser.navigate_to(url)
 browser.find_element('#some-element').click
-browser.screenshot_to_file('screenshot.png')
+browser.screenshot('screenshot.png')
 
 browser.stop
 ```

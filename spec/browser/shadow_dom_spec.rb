@@ -15,7 +15,7 @@ RSpec.describe 'Shadow dom' do
     expect(checkbox).to be_a(Chromate::Element)
     checkbox.click
 
-    browser.screenshot_to_file('spec/apps/shadow_checkbox/click.png')
+    browser.screenshot('spec/apps/shadow_checkbox/click.png')
 
     browser.stop
     expect(File.exist?('spec/apps/shadow_checkbox/click.png')).to be_truthy
