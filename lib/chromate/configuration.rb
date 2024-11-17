@@ -63,18 +63,22 @@ module Chromate
       @args << '--use-angle=metal' if mac?
     end
 
+    # @return [Chromate::Configuration]
     def self.config
       @config ||= Configuration.new
     end
 
+    # @yield [Chromate::Configuration]
     def self.configure
       yield(config)
     end
 
+    # @return [Chromate::Configuration]
     def config
       self.class.config
     end
 
+    # @return [String]
     def chrome_path
       return ENV['CHROME_BIN'] if ENV['CHROME_BIN']
 
@@ -89,6 +93,10 @@ module Chromate
       end
     end
 
+    # @option [Boolean] headless
+    # @option [Boolean] xfvb
+    # @option [Hash] proxy
+    # @option [Array<String>] disable_features
     def generate_arguments(headless: @headless, xfvb: @xfvb, proxy: @proxy, disable_features: @disable_features, **_args)
       dynamic_args = []
 
@@ -100,6 +108,7 @@ module Chromate
       @args + dynamic_args
     end
 
+    # @return [Hash]
     def options
       {
         chrome_path: chrome_path,

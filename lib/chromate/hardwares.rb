@@ -11,6 +11,10 @@ module Chromate
   module Hardwares
     extend Helpers
 
+    # @param [Hash] args
+    # @option args [Chromate::Client] :client
+    # @option args [Chromate::Element] :element
+    # @return [Chromate::Hardwares::MouseController]
     def mouse(**args)
       browser = args[:client].browser
       if browser.options[:native_control]
@@ -32,6 +36,10 @@ module Chromate
     end
     module_function :mouse
 
+    # @param [Hash] args
+    # @option args [Chromate::Client] :client
+    # @option args [Chromate::Element] :element
+    # @return [Chromate::Hardwares::KeyboardController]
     def keyboard(**args)
       Chromate::CLogger.log('⌨️ Loading Virtual keyboard controller')
       Keyboards::VirtualController.new(**args)

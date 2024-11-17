@@ -6,10 +6,12 @@ require_relative 'chromate/configuration'
 
 module Chromate
   class << self
+    # @yield [Chromate::Configuration]
     def configure
       yield configuration
     end
 
+    # @return [Chromate::Configuration]
     def configuration
       @configuration ||= Configuration.new
     end
