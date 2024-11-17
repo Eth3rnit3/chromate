@@ -2,6 +2,11 @@
 
 ## 🚀 Features
 - **Add keyboard actions**: Implemented keyboard interactions, including typing and key pressing.
+- **Add drag and drop action**: Implemented drag and drop bewteen elements
+
+## 🛠 Core Enhancements
+- **Improve mouse movements**: Keep mouse position between interaction during browser session
+- **Improve mouse movements**: Improving Bézier curve usage for more human like behavior
 
 # Changelog v0.0.1.pre
 

@@ -185,6 +185,15 @@ Simulates pressing the Enter key and submits the form if the element is inside o
   element.press_enter
   ```
 
+#### `#drop_to(element)`
+
+Drag current element and drop to target
+
+- **Example:**
+  ```ruby
+  element.drop_to(target_element)
+  ```
+
 #### `#find_element(selector)`
 
 Finds a single child element matching the given selector.
