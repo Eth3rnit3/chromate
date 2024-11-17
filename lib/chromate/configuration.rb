@@ -9,19 +9,19 @@ module Chromate
     include Helpers
     include Exceptions
     DEFAULT_ARGS = [
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-blink-features=AutomationControlled',
-      '--disable-extensions',
-      '--disable-infobars',
-      '--no-sandbox',
-      '--test-type',
-      '--disable-popup-blocking',
-      '--ignore-certificate-errors',
-      '--disable-gpu',
-      '--disable-dev-shm-usage',
+      '--no-first-run', # Skip the first run wizard
+      '--no-default-browser-check', # Disable the default browser check
+      '--disable-blink-features=AutomationControlled', # Disable the AutomationControlled feature
+      '--disable-extensions', # Disable extensions
+      '--disable-infobars', # Disable the infobar that asks if you want to install Chrome
+      '--no-sandbox', # Required for chrome devtools to work
+      '--test-type', # Remove the not allowed message for --no-sandbox flag
+      '--disable-dev-shm-usage', # Disable /dev/shm usage
+      '--disable-gpu', # Disable the GPU
+      '--disable-popup-blocking', # Disable popup blocking
+      '--ignore-certificate-errors', # Ignore certificate errors
       '--window-size=1920,1080', # TODO: Make this automatic
-      '--hide-crash-restore-bubble'
+      '--hide-crash-restore-bubble' # Hide the crash restore bubble
     ].freeze
     HEADLESS_ARGS = [
       '--headless=new',

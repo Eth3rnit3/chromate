@@ -65,14 +65,30 @@ namespace :chromate do
     end
 
     task :cloudflare do
-      Chromate.configure do |config|
-        config.headless = false
-      end
       browser = Chromate::Browser.new(browser_args)
       browser.start
       browser.navigate_to("https://2captcha.com/fr/demo/cloudflare-turnstile-challenge")
       sleep 10
       browser.screenshot("results/cloudflare.png")
+      browser.stop
+    end
+
+    task :my_ip do
+      browser = Chromate::Browser.new(browser_args)
+      browser.start
+      browser.navigate_to("https://whatismyipaddress.com")
+      sleep 2
+      browser.click_element('//*[@id="qc-cmp2-ui"]/div[2]/div/button[3]')
+      browser.screenshot("results/my_ip.png")
+      browser.stop
+    end
+
+    task :headers do
+      browser = Chromate::Browser.new(browser_args)
+      browser.start
+      browser.navigate_to("https://httpbin.org/headers")
+      sleep 2
+      browser.screenshot("results/headers.png")
       browser.stop
     end
   end

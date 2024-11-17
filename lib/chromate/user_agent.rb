@@ -15,7 +15,16 @@ module Chromate
 
     # @return [String]
     def call
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+      case os
+      when 'Linux'
+        linux_agent
+      when 'Macintosh'
+        mac_agent
+      when 'Windows'
+        windows_agent
+      else
+        raise 'Unknown OS'
+      end
     end
 
     private
@@ -32,6 +41,18 @@ module Chromate
       else
         'Unknown'
       end
+    end
+
+    def linux_agent
+      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    end
+
+    def mac_agent
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+    end
+
+    def windows_agent
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
     end
   end
 end
