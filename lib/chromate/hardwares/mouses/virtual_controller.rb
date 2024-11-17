@@ -44,7 +44,7 @@ module Chromate
           dispatch_mouse_event('mouseReleased', target_x, target_y, button: 'right', click_count: 1)
         end
 
-        def drag_and_drop_to(element)
+        def drag_and_drop_to(element) # rubocop:disable Metrics/AbcSize
           hover
 
           target_x = element.x + (element.width / 2)
@@ -157,7 +157,7 @@ module Chromate
           @mouse_position[:y] = target_y
         end
 
-        def bezier_curve(steps:, start_x:, start_y:, target_x:, target_y:)
+        def bezier_curve(steps:, start_x:, start_y:, target_x:, target_y:) # rubocop:disable Metrics/AbcSize
           # Points de contrôle pour une courbe plus naturelle
           control_x1 = start_x + (rand(50..150) * (target_x > start_x ? 1 : -1))
           control_y1 = start_y + (rand(50..150) * (target_y > start_y ? 1 : -1))
