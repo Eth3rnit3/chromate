@@ -5,15 +5,24 @@ module Chromate
     module Mouses
       class VirtualController < Chromate::Hardwares::MouseController
         def hover
-          steps     = rand(25..50)
-          points    = bezier_curve(steps: steps)
-          duration  = rand(0.1..0.3)
+          # Définir la position cible pour le hover autour du centre de l'élément
+          target_x = element.x + (element.width / 2) + rand(-20..20)
+          target_y = element.y + (element.height / 2) + rand(-20..20)
+          start_x = @mouse_position[:x]
+          start_y = @mouse_position[:y]
+          steps = rand(25..50)
+          duration = rand(0.1..0.3)
 
+          # Générer une courbe de Bézier pour le mouvement naturel
+          points = bezier_curve(steps: steps, start_x: start_x, start_y: start_y, target_x: target_x, target_y: target_y)
+
+          # Déplacer la souris le long de la courbe de Bézier
           points.each do |point|
             dispatch_mouse_event('mouseMoved', point[:x], point[:y])
             sleep(duration / steps)
           end
 
+          # Mettre à jour la position de la souris
           update_mouse_position(points.last[:x], points.last[:y])
         end
 
@@ -35,44 +44,38 @@ module Chromate
           dispatch_mouse_event('mouseReleased', target_x, target_y, button: 'right', click_count: 1)
         end
 
-        def drag_and_drop_to(element) # rubocop:disable Metrics/AbcSize
+        def drag_and_drop_to(element)
           hover
 
           target_x = element.x + (element.width / 2)
           target_y = element.y + (element.height / 2)
           start_x = @mouse_position[:x]
           start_y = @mouse_position[:y]
-          steps = 50
+          steps = rand(25..50)
           duration = rand(0.1..0.3)
 
-          # Step 1: Start the drag (dragEnter) with updating the mouse position
+          # Générer une courbe de Bézier pour le mouvement naturel
+          points = bezier_curve(steps: steps, start_x: start_x, start_y: start_y, target_x: target_x, target_y: target_y)
+
+          # Étape 1 : Début du drag (dragEnter) avec mise à jour de la position de la souris
           move_mouse_to(start_x, start_y)
           dispatch_drag_event('dragEnter', start_x, start_y)
 
-          # Step 2: Move the mouse in a straight line to the target element (dragOver)
-          x_step = (target_x - start_x) / steps.to_f
-          y_step = (target_y - start_y) / steps.to_f
-
-          (1..steps).each do |i|
-            new_x = start_x + (x_step * i)
-            new_y = start_y + (y_step * i)
-
-            # Update the mouse position
-            move_mouse_to(new_x, new_y)
-
-            # Send the dragOver event
-            dispatch_drag_event('dragOver', new_x, new_y)
+          # Étape 2 : Déplacer la souris le long de la courbe de Bézier (dragOver)
+          points.each do |point|
+            move_mouse_to(point[:x], point[:y])
+            dispatch_drag_event('dragOver', point[:x], point[:y])
             sleep(duration / steps)
           end
 
-          # Step 3: Drop the element (drop)
+          # Étape 3 : Lâcher l'élément (drop)
           move_mouse_to(target_x, target_y)
           dispatch_drag_event('drop', target_x, target_y)
 
-          # Step 4: End the drag (dragEnd)
+          # Étape 4 : Fin du drag (dragEnd)
           dispatch_drag_event('dragEnd', target_x, target_y)
 
-          # Step 5: Update the mouse position
+          # Mettre à jour la position de la souris
           update_mouse_position(target_x, target_y)
         end
 
@@ -152,6 +155,21 @@ module Chromate
         def update_mouse_position(target_x, target_y)
           @mouse_position[:x] = target_x
           @mouse_position[:y] = target_y
+        end
+
+        def bezier_curve(steps:, start_x:, start_y:, target_x:, target_y:)
+          # Points de contrôle pour une courbe plus naturelle
+          control_x1 = start_x + (rand(50..150) * (target_x > start_x ? 1 : -1))
+          control_y1 = start_y + (rand(50..150) * (target_y > start_y ? 1 : -1))
+          control_x2 = target_x + (rand(50..150) * (target_x > start_x ? -1 : 1))
+          control_y2 = target_y + (rand(50..150) * (target_y > start_y ? -1 : 1))
+
+          (0..steps).map do |i|
+            t = i.to_f / steps
+            x = (((1 - t)**3) * start_x) + (3 * ((1 - t)**2) * t * control_x1) + (3 * (1 - t) * (t**2) * control_x2) + ((t**3) * target_x)
+            y = (((1 - t)**3) * start_y) + (3 * ((1 - t)**2) * t * control_y1) + (3 * (1 - t) * (t**2) * control_y2) + ((t**3) * target_y)
+            { x: x, y: y }
+          end
         end
       end
     end
