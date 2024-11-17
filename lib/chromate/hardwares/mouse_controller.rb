@@ -6,14 +6,22 @@ module Chromate
       CLICK_DURATION_RANGE = (0.01..0.1)
       DOUBLE_CLICK_DURATION_RANGE = (0.1..0.5)
 
-      attr_accessor :element, :client, :mouse_position
+      def self.reset_mouse_position
+        @@mouse_position = { x: 0, y: 0 } # rubocop:disable Style/ClassVars
+      end
+
+      attr_accessor :element, :client
 
       # @param [Chromate::Element] element
       # @param [Chromate::Client] client
       def initialize(element: nil, client: nil)
         @element        = element
         @client         = client
-        @mouse_position = { x: 0, y: 0 }
+      end
+
+      # @return [Hash]
+      def mouse_position
+        @@mouse_position ||= { x: 0, y: 0 } # rubocop:disable Style/ClassVars
       end
 
       # @return [self]
@@ -79,6 +87,16 @@ module Chromate
           y = (((1 - t)**3) * start_y) + (3 * ((1 - t)**2) * t * control_y1) + (3 * (1 - t) * (t**2) * control_y2) + ((t**3) * t_y)
           { x: x, y: y }
         end
+      end
+
+      # @param [Integer] target_x
+      # @param [Integer] target_y
+      # @return [Hash]
+      def update_mouse_position(target_x, target_y)
+        @@mouse_position[:x] = target_x
+        @@mouse_position[:y] = target_y
+
+        mouse_position
       end
     end
   end

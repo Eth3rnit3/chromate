@@ -62,6 +62,7 @@ module Chromate
       @args << "--remote-debugging-port=#{@client.port}"
 
       start_video_recording if @record
+      Hardwares::MouseController.reset_mouse_position
 
       if @xfvb
         if ENV['DISPLAY'].nil?

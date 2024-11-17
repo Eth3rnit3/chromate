@@ -8,8 +8,8 @@ module Chromate
           # Define the target position
           target_x = element.x + (element.width / 2) + rand(-20..20)
           target_y = element.y + (element.height / 2) + rand(-20..20)
-          start_x = @mouse_position[:x]
-          start_y = @mouse_position[:y]
+          start_x = mouse_position[:x]
+          start_y = mouse_position[:y]
           steps = rand(25..50)
           duration = rand(0.1..0.3)
 
@@ -50,8 +50,8 @@ module Chromate
 
           target_x = element.x + (element.width / 2)
           target_y = element.y + (element.height / 2)
-          start_x = @mouse_position[:x]
-          start_y = @mouse_position[:y]
+          start_x = mouse_position[:x]
+          start_y = mouse_position[:y]
           steps = rand(25..50)
           duration = rand(0.1..0.3)
 
@@ -155,11 +155,6 @@ module Chromate
           client.send_message('Input.dispatchMouseEvent', params)
 
           self
-        end
-
-        def update_mouse_position(target_x, target_y)
-          @mouse_position[:x] = target_x
-          @mouse_position[:y] = target_y
         end
       end
     end
