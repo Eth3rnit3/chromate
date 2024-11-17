@@ -4,7 +4,7 @@ module Chromate
   module Hardwares
     module Mouses
       class VirtualController < Chromate::Hardwares::MouseController
-        def hover
+        def hover # rubocop:disable Metrics/AbcSize
           # Définir la position cible pour le hover autour du centre de l'élément
           target_x = element.x + (element.width / 2) + rand(-20..20)
           target_y = element.y + (element.height / 2) + rand(-20..20)
