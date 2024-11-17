@@ -14,16 +14,20 @@ module Chromate
       end
 
       # @param [String] key
+      # @return [self]
       def press_key(_key)
         raise NotImplementedError
       end
 
       # @param [String] text
+      # @return [self]
       def type(text)
         text.each_char do |char|
           press_key(char)
           sleep(@type_interval)
         end
+
+        self
       end
     end
   end

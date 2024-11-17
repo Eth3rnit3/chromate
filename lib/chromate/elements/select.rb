@@ -41,6 +41,7 @@ module Chromate
         result.dig('result', 'value')
       end
 
+      # @return [String]
       def javascript
         <<~JAVASCRIPT
           function() {

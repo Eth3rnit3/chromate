@@ -85,7 +85,7 @@ module Chromate
           system_point = CGEventGetLocation(event)
           CFRelease(event)
 
-          # Convertir les coordonnées système en coordonnées navigateur
+          # Convert the system coordinates to browser coordinates
           browser_x = system_point[:x] / @scale_factor
           browser_y = (@display_height - system_point[:y]) / @scale_factor
 
@@ -94,7 +94,7 @@ module Chromate
             y: browser_y
           }
 
-          # Retourner un nouveau CGPoint avec les coordonnées système
+          # Return the browser coordinates
           CGPoint.new.tap do |p|
             p[:x] = system_point[:x]
             p[:y] = system_point[:y]
@@ -102,7 +102,7 @@ module Chromate
         end
 
         def convert_coordinates(browser_x, browser_y)
-          # Convertir les coordonnées du navigateur en coordonnées système
+          # Convert the browser coordinates to system coordinates
           system_x = browser_x * @scale_factor
           system_y = @display_height - (browser_y * @scale_factor)
 
@@ -113,12 +113,12 @@ module Chromate
         end
 
         def determine_scale_factor
-          # Obtenir le facteur d'échelle en comparant les dimensions logiques et physiques
-          # Par défaut, utiliser 2.0 pour les écrans Retina
+          # Determine the scale factor for the display
+          # By default, the scale factor is 2.0 for Retina displays
 
           `system_profiler SPDisplaysDataType | grep -i "retina"`.empty? ? 1.0 : 2.0
         rescue StandardError
-          2.0 # Par défaut pour les écrans Retina modernes
+          2.0 # Default to 2.0 if the scale factor cannot be determined
         end
       end
     end

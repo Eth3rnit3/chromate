@@ -4,7 +4,6 @@ module Chromate
   module Hardwares
     module Keyboards
       class VirtualController < Chromate::Hardwares::KeyboardController
-        # @param [String] key
         def press_key(key = 'Enter')
           params = {
             key: key,
@@ -19,10 +18,14 @@ module Chromate
 
           # Dispatch keyUp event
           client.send_message('Input.dispatchKeyEvent', params.merge(type: 'keyUp'))
+
+          self
         end
 
         private
 
+        # @param [String] key
+        # @return [String]
         def key_to_code(key)
           case key
           when 'Enter' then 'Enter'
@@ -39,6 +42,8 @@ module Chromate
           end
         end
 
+        # @param [String] key
+        # @return [Integer]
         def key_to_virtual_code(key)
           case key
           when 'Enter' then 0x0D

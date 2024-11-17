@@ -154,7 +154,7 @@ RSpec.describe Chromate::Client do
 
     it 'handles the message' do
       client.start
-      client.handle_message({ 'method' => 'Target.targetCreated' })
+      client.send(:handle_message, { 'method' => 'Target.targetCreated' })
 
       expect(queue).to have_received(:pop)
     end
@@ -162,7 +162,7 @@ RSpec.describe Chromate::Client do
     context 'when the message is a response' do
       it 'handles the response' do
         client.start
-        client.handle_message({ 'id' => 1, 'result' => { 'targetId' => '1' } })
+        client.send(:handle_message, { 'id' => 1, 'result' => { 'targetId' => '1' } })
 
         expect(queue).to have_received(:pop)
       end
@@ -171,7 +171,7 @@ RSpec.describe Chromate::Client do
     context 'when the message is an event' do
       it 'handles the event' do
         client.start
-        client.handle_message({ 'method' => 'Target.targetCreated' })
+        client.send(:handle_message, { 'method' => 'Target.targetCreated' })
 
         expect(queue).to have_received(:pop)
       end
@@ -207,7 +207,7 @@ RSpec.describe Chromate::Client do
       listener = proc { |message| puts message }
       client.start
       client.on_message(&listener)
-      client.handle_message({ 'method' => 'Target.targetCreated' })
+      client.send(:handle_message, { 'method' => 'Target.targetCreated' })
 
       expect(queue).to have_received(:pop)
     end
@@ -229,7 +229,7 @@ RSpec.describe Chromate::Client do
       end
 
       it 'returns the WebSocket URL' do
-        expect(client.fetch_websocket_debug_url).to eq('ws://localhost:8627/devtools/page/1')
+        expect(client.send(:fetch_websocket_debug_url)).to eq('ws://localhost:8627/devtools/page/1')
       end
     end
 
@@ -247,7 +247,7 @@ RSpec.describe Chromate::Client do
       end
 
       it 'creates a new page target' do
-        expect(client.fetch_websocket_debug_url).to eq('ws://localhost:8627/devtools/page/1')
+        expect(client.send(:fetch_websocket_debug_url)).to eq('ws://localhost:8627/devtools/page/1')
       end
     end
   end

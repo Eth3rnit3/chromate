@@ -24,6 +24,13 @@ module Chromate
     include Actions::Screenshot
     include Actions::Dom
 
+    # @param options [Hash] Options for the browser
+    # @option options [String] :chrome_path The path to the Chrome executable
+    # @option options [String] :user_data_dir The path to the user data directory
+    # @option options [Boolean] :headless Whether to run Chrome in headless mode
+    # @option options [Boolean] :xfvb Whether to run Chrome in Xvfb
+    # @option options [Boolean] :native_control Whether to use native controls
+    # @option options [Boolean] :record Whether to record the screen
     def initialize(options = {})
       @options        = config.options.merge(options)
       @chrome_path    = @options.fetch(:chrome_path)
@@ -48,6 +55,7 @@ module Chromate
       at_exit { stop }
     end
 
+    # @return [self]
     def start
       build_args
       @client = Client.new(self)
@@ -67,27 +75,34 @@ module Chromate
       sleep 2
 
       @client.start
+
       self
     end
 
+    # @return [self]
     def stop
       Process.kill('TERM', @process)        if @process
       Process.kill('TERM', @record_process) if @record_process
       Process.kill('TERM', @xfvb_process)   if @xfvb_process
       @client&.stop
+
+      self
     end
 
+    # @return [Boolean]
     def native_control?
       @native_control
     end
 
     private
 
+    # @return [Integer]
     def start_video_recording
       outfile = File.join(Dir.pwd, "output_video_#{Time.now.to_i}.mp4")
       @record_process = spawn("ffmpeg -f x11grab -r 25 -s 1920x1080 -i #{ENV.fetch("DISPLAY", ":99")} -pix_fmt yuv420p -y #{outfile}")
     end
 
+    # @return [Array<String>]
     def build_args
       exclude_switches = config.exclude_switches || []
       exclude_switches += @options[:exclude_switches] if @options[:exclude_switches]
@@ -100,12 +115,14 @@ module Chromate
       @args
     end
 
+    # @return [void]
     def stop_and_exit
       puts 'Stopping browser...'
       stop
       exit
     end
 
+    # @return [Chromate::Configuration]
     def config
       Chromate.configuration
     end

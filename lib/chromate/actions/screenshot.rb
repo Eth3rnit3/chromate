@@ -3,6 +3,12 @@
 module Chromate
   module Actions
     module Screenshot
+      # @param file_path [String] The path to save the screenshot to
+      # @param options [Hash] Options for the screenshot
+      # @option options [String] :format The format of the screenshot
+      # @option options [Boolean] :full_page Whether to take a screenshot of the full page
+      # @option options [Boolean] :fromSurface Whether to take a screenshot from the surface
+      # @return [Boolean] Whether the screenshot was successful
       def screenshot(file_path = "#{Time.now.to_i}.png", options = {})
         return xvfb_screenshot(file_path) if @xfvb
         return screenshot_full_page(file_path, options) if options.delete(:full_page)
@@ -14,11 +20,17 @@ module Chromate
 
       private
 
+      # @param file_path [String] The path to save the screenshot to
+      # @return [Boolean] Whether the screenshot was successful
       def xvfb_screenshot(file_path)
         display = ENV['DISPLAY'] || ':99'
         system("xwd -root -display #{display} | convert xwd:- #{file_path}")
       end
 
+      # @param file_path [String] The path to save the screenshot to
+      # @param options [Hash] Options for the screenshot
+      # @option options [String] :format The format of the screenshot
+      # @return [Boolean] Whether the screenshot was successful
       def screenshot_full_page(file_path, options = {})
         metrics = @client.send_message('Page.getLayoutMetrics')
 
@@ -39,6 +51,10 @@ module Chromate
         true
       end
 
+      # @param options [Hash] Options for the screenshot
+      # @option options [String] :format The format of the screenshot
+      # @option options [Boolean] :fromSurface Whether to take a screenshot from the surface
+      # @return [String] The image data
       def make_screenshot(options = {})
         default_options = {
           format: 'png',

@@ -16,40 +16,50 @@ module Chromate
         @mouse_position = { x: 0, y: 0 }
       end
 
+      # @return [self]
       def hover
         raise NotImplementedError
       end
 
+      # @return [self]
       def click
         raise NotImplementedError
       end
 
+      # @return [self]
       def double_click
         raise NotImplementedError
       end
 
+      # @return [self]
       def right_click
         raise NotImplementedError
       end
 
+      # @return [Integer]
       def position_x
         mouse_position[:x]
       end
 
+      # @return [Integer]
       def position_y
         mouse_position[:y]
       end
 
       private
 
+      # @return [Integer]
       def target_x
         element.x + (element.width / 2)
       end
 
+      # @return [Integer]
       def target_y
         element.y + (element.height / 2)
       end
 
+      # @param [Integer] steps
+      # @return [Array<Hash>]
       def bezier_curve(steps: 50) # rubocop:disable Metrics/AbcSize
         control_x = (target_x / 2)
         control_y = (target_y / 2)
