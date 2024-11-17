@@ -9,13 +9,17 @@ class TestInDocker
     start_servers
     browser = Chromate::Browser.new(headless: false, xfvb: true, record: true, native_control: false)
     browser.start
-    browser.screenshot('dom_actions_1.png')
-    browser.navigate_to(server_urls['dom_actions'])
-    browser.screenshot('dom_actions_2.png')
+
+    url = server_urls['where_moved']
+    browser.navigate_to(url)
     browser.refresh
-    browser.screenshot('dom_actions_3.png')
-    sleep 5
-    browser.screenshot('dom_actions_4.png')
+    browser.hover_element('#red')
+    browser.hover_element('#yellow')
+    browser.hover_element('#green')
+    browser.hover_element('#blue')
+
+    browser.screenshot('hover_all.png')
+
     browser.stop
     stop_servers
   end

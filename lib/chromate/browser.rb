@@ -61,9 +61,6 @@ module Chromate
       @client = Client.new(self)
       @args << "--remote-debugging-port=#{@client.port}"
 
-      start_video_recording if @record
-      Hardwares::MouseController.reset_mouse_position
-
       if @xfvb
         if ENV['DISPLAY'].nil?
           ENV['DISPLAY'] = ':0'   if mac? # XQuartz generally uses :0 on Mac
@@ -72,19 +69,23 @@ module Chromate
         @args << "--display=#{ENV.fetch("DISPLAY", nil)}"
       end
 
+      Hardwares::MouseController.reset_mouse_position
+
       @process = spawn(*@args, err: 'chrome_errors.log', out: 'chrome_output.log')
       sleep 2
 
       @client.start
+
+      start_video_recording if @record
 
       self
     end
 
     # @return [self]
     def stop
-      Process.kill('TERM', @process)        if @process
-      Process.kill('TERM', @record_process) if @record_process
-      Process.kill('TERM', @xfvb_process)   if @xfvb_process
+      stop_process(@process)        if @process
+      stop_process(@record_process) if @record_process
+      stop_process(@xfvb_process)   if @xfvb_process
       @client&.stop
 
       self
@@ -100,7 +101,8 @@ module Chromate
     # @return [Integer]
     def start_video_recording
       outfile = File.join(Dir.pwd, "output_video_#{Time.now.to_i}.mp4")
-      @record_process = spawn("ffmpeg -f x11grab -r 25 -s 1920x1080 -i #{ENV.fetch("DISPLAY", ":99")} -pix_fmt yuv420p -y #{outfile}")
+      @record_process = spawn("ffmpeg -f x11grab -draw_mouse 1 -r 30 -s 1920x1080 -i #{ENV.fetch("DISPLAY",
+                                                                                                 ":99")} -c:v libx264 -preset ultrafast -pix_fmt yuv420p -y #{outfile}")
     end
 
     # @return [Array<String>]
@@ -116,9 +118,31 @@ module Chromate
       @args
     end
 
+    # @param pid [Integer] PID of the process to stop
+    # @param timeout [Integer] Timeout in seconds to wait for the process to stop
+    # @return [void]
+    def stop_process(pid, timeout: 5)
+      return unless pid
+
+      # Send SIGINT to the process to stop it gracefully
+      Process.kill('INT', pid)
+      begin
+        Timeout.timeout(timeout) do
+          Process.wait(pid)
+        end
+      rescue Timeout::Error
+        # If the process does not stop gracefully, send SIGKILL
+        CLogger.log("Process #{pid} did not stop gracefully. Sending SIGKILL...", level: :debug)
+        Process.kill('KILL', pid)
+        Process.wait(pid)
+      end
+    rescue Errno::ESRCH
+      # The process has already stopped
+    end
+
     # @return [void]
     def stop_and_exit
-      puts 'Stopping browser...'
+      CLogger.log('Stopping browser...', level: :debug)
       stop
       exit
     end
