@@ -1,72 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Drag and Drop</title>
-<style>
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-  }
-
-  .draggable {
-    width: 150px;
-    height: 150px;
-    background-color: #3498db;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    cursor: grab;
-  }
-
-  .dropzone {
-    width: 200px;
-    height: 200px;
-    border: 2px dashed #2ecc71;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 50px;
-  }
-
-  .success {
-    background-color: #2ecc71;
-  }
-</style>
+    <meta charset="UTF-8">
+    <title>Test Drag and Drop avec suivi de la souris</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            position: relative;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .draggable {
+            width: 150px;
+            height: 150px;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: grab;
+            position: absolute;
+            z-index: 1;
+            top: 200px;
+            left: 200px;
+        }
+        .dropzone {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #2ecc71;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            z-index: 1;
+            top: 200px;
+            left: 500px;
+        }
+        .success {
+            background-color: #2ecc71;
+        }
+    </style>
 </head>
 <body>
+    <canvas id="tracer"></canvas>
+    <div id="draggable" class="draggable" draggable="true">Drag Me</div>
+    <div id="dropzone" class="dropzone">Drop Here</div>
 
-<div id="draggable" class="draggable" draggable="true">Drag Me</div>
-<div id="dropzone" class="dropzone">Drop Here</div>
+    <script>
+        const canvas = document.getElementById('tracer');
+        const ctx = canvas.getContext('2d');
+        const draggable = document.getElementById('draggable');
+        const dropzone = document.getElementById('dropzone');
 
-<script>
-  const draggable = document.getElementById('draggable');
-  const dropzone = document.getElementById('dropzone');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-  // Activer le drag sur toute la div
-  draggable.addEventListener('dragstart', (event) => {
-    event.dataTransfer.setData('text/plain', 'dragged');
-  });
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
 
-  dropzone.addEventListener('dragover', (event) => {
-    event.preventDefault();
-  });
+        let previousPosition = null;
 
-  dropzone.addEventListener('drop', (event) => {
-    event.preventDefault();
-    const data = event.dataTransfer.getData('text/plain');
-    if (data === 'dragged') {
-      dropzone.classList.add('success');
-      dropzone.textContent = 'Dropped!';
-    }
-  });
-</script>
+        // Fonction pour tracer le mouvement de la souris
+        function drawMouseMovement(x, y) {
+            if (previousPosition !== null) {
+                ctx.beginPath();
+                ctx.moveTo(previousPosition.x, previousPosition.y);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+            previousPosition = { x: x, y: y };
+        }
 
+        // Fonction pour réinitialiser la position précédente
+        function resetMousePosition() {
+            previousPosition = null;
+        }
+
+        // Fonction pour afficher un indicateur de clic
+        function showClickIndicator(x, y) {
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Suivi des mouvements de la souris et des clics
+        document.addEventListener('mousemove', (event) => {
+            drawMouseMovement(event.clientX, event.clientY);
+        });
+
+        document.addEventListener('click', (event) => {
+            showClickIndicator(event.clientX, event.clientY);
+        });
+
+        // Gestion du drag and drop
+        draggable.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', 'dragged');
+            resetMousePosition();
+        });
+
+        dropzone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+        dropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/plain');
+            if (data === 'dragged') {
+                dropzone.classList.add('success');
+                dropzone.textContent = 'Dropped!';
+            }
+            resetMousePosition();
+        });
+
+        // Ajuster la taille du canevas lorsque la fenêtre est redimensionnée
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            resetMousePosition();
+        });
+
+        // Exposer les fonctions pour être appelées depuis Ruby
+        window.drawMouseMovement = drawMouseMovement;
+        window.showClickIndicator = showClickIndicator;
+        window.resetMousePosition = resetMousePosition;
+    </script>
 </body>
 </html>

@@ -86,7 +86,13 @@ RSpec.describe 'Mouse' do
     browser.refresh
     blue_square = browser.find_element('#draggable')
     green_square = browser.find_element('#dropzone')
+
+    expect(green_square.text).to eq('Drop Here')
+
     blue_square.drop_to(green_square)
+
+    expect(green_square.text).to eq('Dropped!')
+
     browser.screenshot('spec/apps/drag_and_drop/droped.png')
 
     browser.stop
