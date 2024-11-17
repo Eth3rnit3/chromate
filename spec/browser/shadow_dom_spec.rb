@@ -9,6 +9,7 @@ RSpec.describe 'Shadow dom' do
     browser.start
     url = server_urls['shadow_checkbox']
     browser.navigate_to(url)
+    browser.refresh
     shadow_container = browser.find_element('#shadow-container')
     expect(shadow_container).to be_shadow_root
     checkbox = shadow_container.find_shadow_child('#shadow-checkbox')

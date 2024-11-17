@@ -3,6 +3,11 @@
 module Chromate
   module Actions
     module Dom
+      # @return [String]
+      def source
+        evaluate_script('document.documentElement.outerHTML')
+      end
+
       # @param selector [String] CSS selector
       # @return [Chromate::Element]
       def find_element(selector)

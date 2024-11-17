@@ -9,6 +9,7 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_clicked']
     browser.navigate_to(url)
+    browser.refresh
     browser.click_element('#interactive-button')
     browser.screenshot('spec/apps/where_clicked/click.png')
 
