@@ -10,6 +10,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.include Support::Server
+  config.include Support::Modes
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

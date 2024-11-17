@@ -13,6 +13,7 @@
 *.log
 .DS_Store
 spec/apps/**/*.png
+spec/video-records/*.mp4
 
 # docker testing
 docker_root/*.log

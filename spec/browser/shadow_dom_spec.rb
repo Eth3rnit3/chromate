@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe 'Shadow dom' do
-  let(:browser) { Chromate::Browser.new(headless: true) }
+  let(:browser) { Chromate::Browser.new(browser_args) }
 
   it 'fills the form' do
     browser.start

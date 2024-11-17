@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe 'Dom actions' do
-  let(:browser) { Chromate::Browser.new(headless: true) }
+  let(:browser) { Chromate::Browser.new(browser_args) }
 
   before(:each) do
     browser.start

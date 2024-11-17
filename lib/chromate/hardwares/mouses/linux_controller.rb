@@ -1,39 +1,7 @@
 # frozen_string_literal: true
 
-require 'ffi'
 require 'chromate/helpers'
-
-module X11
-  extend FFI::Library
-  ffi_lib 'X11'
-
-  # Types
-  typedef :ulong, :Window
-  typedef :pointer, :Display
-
-  # Fonctions X11
-  attach_function :XOpenDisplay, [:string], :pointer
-  attach_function :XCloseDisplay, [:pointer], :int
-  attach_function :XDefaultRootWindow, [:pointer], :ulong
-  attach_function :XWarpPointer, %i[pointer ulong ulong int int uint uint int int], :int
-  attach_function :XQueryPointer, %i[pointer ulong pointer pointer pointer pointer pointer pointer pointer], :bool
-  attach_function :XFlush, [:pointer], :int
-  attach_function :XQueryTree, %i[pointer ulong pointer pointer pointer pointer], :int
-  attach_function :XFetchName, %i[pointer ulong pointer], :int
-  attach_function :XFree, [:pointer], :int
-  attach_function :XRaiseWindow, %i[pointer ulong], :int
-  attach_function :XSetInputFocus, %i[pointer ulong int ulong], :int
-
-  # Constantes
-  RevertToParent = 2
-end
-
-module Xtst
-  extend FFI::Library
-  ffi_lib 'Xtst'
-
-  attach_function :XTestFakeButtonEvent, %i[pointer uint int ulong], :int
-end
+require_relative 'x11'
 
 module Chromate
   module Hardwares
@@ -58,17 +26,20 @@ module Chromate
         def hover
           focus_chrome_window
           smooth_move_to(target_x, target_y)
-          current_mouse_position
+          update_mouse_position(target_x, target_y)
         end
 
         def click
           hover
           simulate_button_event(LEFT_BUTTON, true)
+          sleep(rand(CLICK_DURATION_RANGE))
           simulate_button_event(LEFT_BUTTON, false)
         end
 
         def right_click
+          hover
           simulate_button_event(RIGHT_BUTTON, true)
+          sleep(rand(CLICK_DURATION_RANGE))
           simulate_button_event(RIGHT_BUTTON, false)
         end
 
@@ -78,35 +49,69 @@ module Chromate
           click
         end
 
+        def drag_and_drop_to(element)
+          hover
+
+          target_x = element.x + (element.width / 2)
+          target_y = element.y + (element.height / 2)
+          start_x = position_x
+          start_y = position_y
+          steps = rand(25..50)
+          duration = rand(0.1..0.3)
+
+          # Generate a Bézier curve for natural movement
+          points = bezier_curve(steps: steps, start_x: start_x, start_y: start_y, t_x: target_x, t_y: target_y)
+
+          # Step 1: Press the left mouse button
+          simulate_button_event(LEFT_BUTTON, true)
+          sleep(rand(CLICK_DURATION_RANGE))
+
+          # Step 2: Drag the element
+          points.each do |point|
+            move_mouse_to(point[:x], point[:y])
+            sleep(duration / steps)
+          end
+
+          # Step 3: Release the left mouse button
+          simulate_button_event(LEFT_BUTTON, false)
+
+          # Update the mouse position
+          update_mouse_position(target_x, target_y)
+
+          self
+        end
+
         private
 
         def smooth_move_to(dest_x, dest_y)
-          start_pos = current_mouse_position
-          start_x = start_pos[:x]
-          start_y = start_pos[:y]
+          start_x = position_x
+          start_y = position_y
 
-          distance = Math.hypot(dest_x - start_x, dest_y - start_y)
-          steps = [distance / 5, 10].max.to_i # Assure un minimum de 10 étapes
+          steps = rand(25..50)
+          duration = rand(0.1..0.3)
 
-          steps.times do |step|
-            t = (step + 1) / steps.to_f
-            # Interpolation linéaire (peut être améliorée avec des courbes pour plus de naturel)
-            current_x = start_x + ((dest_x - start_x) * t)
-            current_y = start_y + ((dest_y - start_y) * t)
+          # Build a Bézier curve for natural movement
+          points = bezier_curve(steps: steps, start_x: start_x, start_y: start_y, t_x: dest_x, t_y: dest_y)
 
-            X11.XWarpPointer(@display, 0, @root_window, 0, 0, 0, 0, current_x.to_i, current_y.to_i)
-            X11.XFlush(@display)
-            sleep(0.005 + (rand * 0.01)) # Pause entre les mouvements pour simuler le comportement humain
+          # Move the mouse along the Bézier curve
+          points.each do |point|
+            move_mouse_to(point[:x], point[:y])
+            sleep(duration / steps)
           end
+        end
+
+        def move_mouse_to(x, y)
+          X11.XWarpPointer(@display, 0, @root_window, 0, 0, 0, 0, x.to_i, y.to_i)
+          X11.XFlush(@display)
         end
 
         def focus_chrome_window
           chrome_window = find_window_by_name(@root_window, 'Chrome')
-          if chrome_window == 0
-            puts 'Aucune fenêtre Chrome trouvée'
+          if chrome_window.zero?
+            Chromate::CLogger.log('No Chrome window found')
           else
             X11.XRaiseWindow(@display, chrome_window)
-            X11.XSetInputFocus(@display, chrome_window, X11::RevertToParent, 0)
+            X11.XSetInputFocus(@display, chrome_window, X11::REVERT_TO_PARENT, 0)
             X11.XFlush(@display)
           end
         end
@@ -118,12 +123,12 @@ module Chromate
           nchildren_return = FFI::MemoryPointer.new(:uint)
 
           status = X11.XQueryTree(@display, window, root_return, parent_return, children_return, nchildren_return)
-          return 0 if status == 0
+          return 0 if status.zero?
 
           nchildren = nchildren_return.read_uint
           children_ptr = children_return.read_pointer
 
-          return 0 if nchildren == 0 || children_ptr.null?
+          return 0 if nchildren.zero? || children_ptr.null?
 
           children = children_ptr.get_array_of_ulong(0, nchildren)
           found_window = 0
@@ -140,7 +145,7 @@ module Chromate
               end
               X11.XFree(window_name_ptr.read_pointer)
             end
-            # Recherche récursive dans les fenêtres enfants
+            # Recursive search for the window
             found_window = find_window_by_name(child, name)
             break if found_window != 0
           end
