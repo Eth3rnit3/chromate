@@ -46,7 +46,6 @@ namespace :chromate do
     end
 
     task :brotector do
-      require "chromate/native/mouse_controller"
       browser = Chromate::Browser.new(browser_args)
       browser.start
       browser.navigate_to("https://kaliiiiiiiiii.github.io/brotector?crash=false")
