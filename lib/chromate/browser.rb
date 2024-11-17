@@ -100,7 +100,8 @@ module Chromate
 
     # @return [Integer]
     def start_video_recording
-      outfile = File.join(Dir.pwd, "output_video_#{Time.now.to_i}.mp4")
+      outname = @record.is_a?(String) ? @record : "output_video_#{Time.now.to_i}.mp4"
+      outfile = File.join(Dir.pwd, outname)
       @record_process = spawn("ffmpeg -f x11grab -draw_mouse 1 -r 30 -s 1920x1080 -i #{ENV.fetch("DISPLAY",
                                                                                                  ":99")} -c:v libx264 -preset ultrafast -pix_fmt yuv420p -y #{outfile}")
     end
