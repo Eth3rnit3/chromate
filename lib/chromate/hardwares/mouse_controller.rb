@@ -66,16 +66,18 @@ module Chromate
 
       # @param [Integer] steps
       # @return [Array<Hash>]
-      def bezier_curve(steps: 50) # rubocop:disable Metrics/AbcSize
-        control_x = (target_x / 2)
-        control_y = (target_y / 2)
+      def bezier_curve(steps:, start_x: position_x, start_y: position_y, t_x: target_x, t_y: target_y) # rubocop:disable Metrics/AbcSize
+        # Points for the Bézier curve
+        control_x1 = start_x + (rand(50..150) * (t_x > start_x ? 1 : -1))
+        control_y1 = start_y + (rand(50..150) * (t_y > start_y ? 1 : -1))
+        control_x2 = t_x + (rand(50..150) * (t_x > start_x ? -1 : 1))
+        control_y2 = t_y + (rand(50..150) * (t_y > start_y ? -1 : 1))
 
-        (0..steps).map do |t|
-          t /= steps.to_f
-          # Compute the position on the quadratic Bezier curve
-          new_x = (((1 - t)**2) * position_x) + (2 * (1 - t) * t * control_x) + ((t**2) * target_x)
-          new_y = (((1 - t)**2) * position_y) + (2 * (1 - t) * t * control_y) + ((t**2) * target_y)
-          { x: new_x, y: new_y }
+        (0..steps).map do |i|
+          t = i.to_f / steps
+          x = (((1 - t)**3) * start_x) + (3 * ((1 - t)**2) * t * control_x1) + (3 * (1 - t) * (t**2) * control_x2) + ((t**3) * t_x)
+          y = (((1 - t)**3) * start_y) + (3 * ((1 - t)**2) * t * control_y1) + (3 * (1 - t) * (t**2) * control_y2) + ((t**3) * t_y)
+          { x: x, y: y }
         end
       end
     end
