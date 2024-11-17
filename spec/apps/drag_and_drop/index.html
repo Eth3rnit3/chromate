@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Drag and Drop</title>
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+
+  .draggable {
+    width: 150px;
+    height: 150px;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: grab;
+  }
+
+  .dropzone {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #2ecc71;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 50px;
+  }
+
+  .success {
+    background-color: #2ecc71;
+  }
+</style>
+</head>
+<body>
+
+<div id="draggable" class="draggable" draggable="true">Drag Me</div>
+<div id="dropzone" class="dropzone">Drop Here</div>
+
+<script>
+  const draggable = document.getElementById('draggable');
+  const dropzone = document.getElementById('dropzone');
+
+  // Activer le drag sur toute la div
+  draggable.addEventListener('dragstart', (event) => {
+    event.dataTransfer.setData('text/plain', 'dragged');
+  });
+
+  dropzone.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  dropzone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const data = event.dataTransfer.getData('text/plain');
+    if (data === 'dragged') {
+      dropzone.classList.add('success');
+      dropzone.textContent = 'Dropped!';
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -35,6 +35,26 @@ module Chromate
           dispatch_mouse_event('mouseReleased', target_x, target_y, button: 'right', click_count: 1)
         end
 
+        def drag_and_drop_to(element)
+          hover
+
+          steps         = rand(25..50)
+          mouse_target  = MouseController.new(element: element, client: client)
+          points        = mouse_target.send(:bezier_curve, steps: steps)
+          duration      = rand(0.1..0.3)
+
+          dispatch_mouse_event('mousePressed', target_x, target_y, button: 'left', click_count: 1)
+
+          points.each do |point|
+            dispatch_mouse_event('mouseMoved', point[:x], point[:y])
+            sleep(duration / steps)
+          end
+
+          dispatch_mouse_event('mouseReleased', points.last[:x], points.last[:y], button: 'left', click_count: 1)
+
+          update_mouse_position(points.last[:x], points.last[:y])
+        end
+
         private
 
         def click!

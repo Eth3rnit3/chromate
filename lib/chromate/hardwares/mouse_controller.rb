@@ -36,6 +36,12 @@ module Chromate
         raise NotImplementedError
       end
 
+      # @params [Chromate::Element] element
+      # @return [self]
+      def drag_and_drop_to(element)
+        raise NotImplementedError
+      end
+
       # @return [Integer]
       def position_x
         mouse_position[:x]

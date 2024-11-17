@@ -137,6 +137,12 @@ module Chromate
       self
     end
 
+    def drop_to(element)
+      mouse.drag_and_drop_to(element)
+
+      self
+    end
+
     # @param [String] selector
     # @return [Chromate::Element]
     def find_element(selector)
