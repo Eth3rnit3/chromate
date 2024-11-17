@@ -6,9 +6,11 @@ PATH
       websocket-client-simple (~> 0.8.0)
 
 GEM
+  remote: https://rubygems.org/
   specs:
     event_emitter (0.2.6)
     ffi (1.17.0)
+    webrick (1.8.2)
     websocket (1.2.11)
     websocket-client-simple (0.8.0)
       event_emitter
@@ -20,6 +22,7 @@ PLATFORMS
 
 DEPENDENCIES
   chromate!
+  webrick
 
 BUNDLED WITH
    2.5.21

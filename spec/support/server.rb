@@ -6,7 +6,7 @@ require 'chromate/c_logger'
 module Support
   module Server
     def start_servers
-      directories   = Dir['spec/apps/*'].select { |entry| File.directory?(entry) }
+      directories   = Dir[File.join(File.dirname(__FILE__), '../apps/*')].select { |entry| File.directory?(entry) }
       ports         = (12_500..12_800).to_a
       @@servers     = [] # rubocop:disable Style/ClassVars
       @@server_urls = {} # rubocop:disable Style/ClassVars
