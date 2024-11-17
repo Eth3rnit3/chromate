@@ -1,4 +1,4 @@
-FROM ruby:3.2-slim
+FROM --platform=linux/amd64 ruby:3.2-slim
 
 RUN apt-get update && apt-get install -y \
     nano \
@@ -51,18 +51,23 @@ RUN apt-get update && apt-get install -y \
     psmisc \
     --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-# Donwload and install Chrome
+# Préparer le système
+RUN apt-get update && apt-get install -y wget gnupg2 lsb-release && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y wget gnupg gnupg2 gnupg1 && rm -rf /var/lib/apt/lists/*
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \ 
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-RUN apt-get update && apt-get -y install google-chrome-stable
+# Télécharger et ajouter la clé GPG
+RUN wget -q -O- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+
+# Ajouter le dépôt Google Chrome
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+
+# Mise à jour et installation de Google Chrome
+RUN apt-get update && apt-get install -y google-chrome-stable
 
 ENV CHROME_BIN=/usr/bin/google-chrome
 
 RUN gem install bundler -v 2.5.21
 
-WORKDIR /app
+WORKDIR /chromate
 
 COPY Gemfile Gemfile.lock chromate.gemspec ./
 COPY lib/chromate/version.rb ./lib/chromate/version.rb
@@ -77,9 +82,13 @@ COPY . .
 
 ENV DISPLAY=:99
 
+WORKDIR /app
+
+COPY docker_root/ /app/
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD [ "bash" ]
 
 # docker build -f dockerfiles/Dockerfile -t chromate .
-# docker run -v $(pwd):/app -it chromate
+# docker run -v $(pwd)/docker_root:/app -it chromate

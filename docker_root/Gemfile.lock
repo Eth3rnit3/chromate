@@ -1,0 +1,25 @@
+PATH
+  remote: /chromate
+  specs:
+    chromate (0.0.1.pre)
+      ffi (~> 1.17.0)
+      websocket-client-simple (~> 0.8.0)
+
+GEM
+  specs:
+    event_emitter (0.2.6)
+    ffi (1.17.0)
+    websocket (1.2.11)
+    websocket-client-simple (0.8.0)
+      event_emitter
+      websocket
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  chromate!
+
+BUNDLED WITH
+   2.5.21

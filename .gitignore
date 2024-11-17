@@ -13,3 +13,8 @@
 *.log
 .DS_Store
 spec/apps/**/*.png
+
+# docker testing
+docker_root/*.log
+docker_root/*.mp4
+docker_root/*.png
