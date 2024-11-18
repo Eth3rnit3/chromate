@@ -4,21 +4,6 @@ module Chromate
   class UserAgent
     # @return [String]
     def self.call
-      new.call
-    end
-
-    def self.os
-      new.os
-    end
-
-    attr_reader :os
-
-    def initialize
-      @os = find_os
-    end
-
-    # @return [String]
-    def call
       case os
       when 'Linux'
         linux_agent
@@ -32,7 +17,7 @@ module Chromate
     end
 
     # @return [String<'Mac', 'Linux', 'Windows', 'Unknown'>]
-    def find_os
+    def self.os
       case RUBY_PLATFORM
       when /darwin/
         'Mac'
@@ -45,17 +30,28 @@ module Chromate
       end
     end
 
-    private
+    def self.os_version
+      case os
+      when 'Linux'
+        '5.15'
+      when 'Mac'
+        '13.0'
+      when 'Windows'
+        '10.0'
+      else
+        raise 'Unknown OS'
+      end
+    end
 
-    def linux_agent
+    def self.linux_agent
       'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
 
-    def mac_agent
+    def self.mac_agent
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
 
-    def windows_agent
+    def self.windows_agent
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
   end

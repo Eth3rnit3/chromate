@@ -4,10 +4,10 @@ module Chromate
   module Actions
     module Stealth
       # @return [void]
-      def patch
+      def patch # rubocop:disable Metrics/MethodLength
         @client.send_message('Network.enable')
 
-        # Définir les en-têtes HTTP personnalisés
+        # Define custom headers
         custom_headers = {
           'User-Agent' => UserAgent.call,
           'Accept-Language' => 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,und;q=0.6,es;q=0.5,pt;q=0.4',
@@ -16,10 +16,10 @@ module Chromate
           'Sec-CH-UA-Mobile' => '?0'
         }
 
-        # Appliquer les en-têtes personnalisés
+        # Apply custom headers
         @client.send_message('Network.setExtraHTTPHeaders', headers: custom_headers)
 
-        # Obtenir les informations de haute entropie pour éviter la détection
+        # Override User-Agent and high-entropy data to avoid fingerprinting
         user_agent_override = {
           userAgent: UserAgent.call,
           platform: UserAgent.os,
@@ -32,14 +32,14 @@ module Chromate
             ],
             fullVersion: '131.0.0.0',
             platform: UserAgent.os,
-            platformVersion: '5.10', # Exemple pour Linux, à adapter selon l'OS
+            platformVersion: UserAgent.os_version,
             architecture: 'x86_64',
             model: '',
             mobile: false
           }
         }
 
-        # Appliquer l'override du User-Agent et des données de haute entropie
+        # Apply User-Agent override and high-entropy data
         @client.send_message('Network.setUserAgentOverride', user_agent_override)
       end
     end

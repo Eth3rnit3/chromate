@@ -48,7 +48,7 @@ namespace :chromate do
     task :brotector do
       browser = Chromate::Browser.new(browser_args)
       browser.start
-      browser.navigate_to("https://kaliiiiiiiiii.github.io/brotector?crash=false")
+      browser.navigate_to("https://kaliiiiiiiiii.github.io/brotector")
       sleep 2
       browser.click_element("#clickHere")
       sleep 3
