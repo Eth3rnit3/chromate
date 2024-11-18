@@ -136,14 +136,14 @@ module Chromate
           client.send_message('Input.dispatchDragEvent', params)
         end
 
-        # @param [Integer] x
-        # @param [Integer] y
+        # @param [Integer] x_target
+        # @param [Integer] y_target
         # @return [self]
-        def move_mouse_to(x, y) # rubocop:disable Naming/MethodParameterName
+        def move_mouse_to(x_target, y_target)
           params = {
             type: 'mouseMoved',
-            x: x,
-            y: y,
+            x: x_target,
+            y: y_target,
             button: 'none',
             clickCount: 0,
             deltaX: 0,

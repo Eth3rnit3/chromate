@@ -100,8 +100,8 @@ module Chromate
           end
         end
 
-        def move_mouse_to(x, y)
-          X11.XWarpPointer(@display, 0, @root_window, 0, 0, 0, 0, x.to_i, y.to_i)
+        def move_mouse_to(x_target, y_target)
+          X11.XWarpPointer(@display, 0, @root_window, 0, 0, 0, 0, x_target.to_i, y_target.to_i)
           X11.XFlush(@display)
         end
 
@@ -116,7 +116,7 @@ module Chromate
           end
         end
 
-        def find_window_by_name(window, name)
+        def find_window_by_name(window, name) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           root_return = FFI::MemoryPointer.new(:ulong)
           parent_return = FFI::MemoryPointer.new(:ulong)
           children_return = FFI::MemoryPointer.new(:pointer)
