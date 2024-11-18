@@ -51,6 +51,7 @@ namespace :chromate do
       browser.navigate_to("https://kaliiiiiiiiii.github.io/brotector?crash=false")
       sleep 2
       browser.click_element("#clickHere")
+      sleep 3
       browser.screenshot("results/brotector.png")
       browser.stop
     end

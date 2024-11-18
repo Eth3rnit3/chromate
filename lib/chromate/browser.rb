@@ -14,6 +14,7 @@ require_relative 'user_agent'
 require_relative 'actions/navigate'
 require_relative 'actions/screenshot'
 require_relative 'actions/dom'
+require_relative 'actions/stealth'
 
 module Chromate
   class Browser
@@ -23,6 +24,7 @@ module Chromate
     include Actions::Navigate
     include Actions::Screenshot
     include Actions::Dom
+    include Actions::Stealth
 
     # @param options [Hash] Options for the browser
     # @option options [String] :chrome_path The path to the Chrome executable
@@ -77,6 +79,8 @@ module Chromate
       @client.start
 
       start_video_recording if @record
+
+      patch
 
       self
     end

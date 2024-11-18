@@ -7,6 +7,10 @@ module Chromate
       new.call
     end
 
+    def self.os
+      new.os
+    end
+
     attr_reader :os
 
     def initialize
@@ -18,7 +22,7 @@ module Chromate
       case os
       when 'Linux'
         linux_agent
-      when 'Macintosh'
+      when 'Mac'
         mac_agent
       when 'Windows'
         windows_agent
@@ -27,13 +31,11 @@ module Chromate
       end
     end
 
-    private
-
-    # @return [String<'Macintosh', 'Linux', 'Windows', 'Unknown'>]
+    # @return [String<'Mac', 'Linux', 'Windows', 'Unknown'>]
     def find_os
       case RUBY_PLATFORM
       when /darwin/
-        'Macintosh'
+        'Mac'
       when /linux/
         'Linux'
       when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
@@ -43,16 +45,18 @@ module Chromate
       end
     end
 
+    private
+
     def linux_agent
       'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
 
     def mac_agent
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
 
     def windows_agent
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
     end
   end
 end
