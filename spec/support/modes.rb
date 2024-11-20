@@ -9,6 +9,20 @@ module Support
       case ENV.fetch('CHROMATE_MODE', nil)
       when 'docker-xvfb'
         { headless: false, xfvb: true, native_control: true, record: "spec/video-records/#{example_name}.mp4" }
+      when 'bot-browser'
+        {
+          headless: true,
+          chrome_path: '/Applications/Chromium.app/Contents/MacOS/Chromium',
+          options: {
+            args: [
+              '--bot-profile=$HOME/Downloads/chrome130-macarm.enc',
+              '--disable-audio-output',
+              '--no-sandbox',
+              '--disable-blink-features=AutomationControlled',
+              '--headless=new'
+            ]
+          }
+        }
       else
         { headless: true, xfvb: false, native_control: false }
       end
