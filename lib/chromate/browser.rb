@@ -79,7 +79,7 @@ module Chromate
 
       start_video_recording if @record
 
-      patch
+      # patch
 
       self
     end

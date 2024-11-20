@@ -15,11 +15,9 @@ module Support
           chrome_path: '/Applications/Chromium.app/Contents/MacOS/Chromium',
           options: {
             args: [
-              '--bot-profile=$HOME/Downloads/chrome130-macarm.enc',
-              '--disable-audio-output',
+              '--bot-profile=/Users/eth3rnit3/Downloads/chrome130-macarm.enc.json',
               '--no-sandbox',
-              '--disable-blink-features=AutomationControlled',
-              '--headless=new'
+              '--headless'
             ]
           }
         }
