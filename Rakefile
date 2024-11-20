@@ -28,7 +28,14 @@ namespace :chromate do
       browser.stop
     end
 
+    # Xfvb mode
     # docker run -it --rm -v $(pwd):/app --env CHROMATE_MODE=docker-xvfb chromate:latest bundle exec rake chromate:test:all
+
+    # BotBrowser mode
+    # docker run -it --rm -v $(pwd):/app --env CHROMATE_MODE=bot-browser chromate:latest bundle exec rake chromate:test:all
+
+    # Default mode
+    # docker run -it --rm -v $(pwd):/app chromate:latest bundle exec rake chromate:test:all
     task :all do
       Rake::Task["chromate:test:pixelscan"].invoke
       Rake::Task["chromate:test:brotector"].invoke

@@ -10,17 +10,10 @@ module Support
       when 'docker-xvfb'
         { headless: false, xfvb: true, native_control: true, record: "spec/video-records/#{example_name}.mp4" }
       when 'bot-browser'
-        {
-          headless: true,
-          chrome_path: '/Applications/Chromium.app/Contents/MacOS/Chromium',
-          options: {
-            args: [
-              '--bot-profile=/Users/eth3rnit3/Downloads/chrome130-macarm.enc.json',
-              '--no-sandbox',
-              '--headless'
-            ]
-          }
-        }
+        require 'bot_browser'
+        BotBrowser.install unless BotBrowser.installed?
+        BotBrowser.load
+        { headless: false, xfvb: false, native_control: false }
       else
         { headless: true, xfvb: false, native_control: false }
       end

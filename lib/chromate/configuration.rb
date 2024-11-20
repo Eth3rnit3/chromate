@@ -47,14 +47,15 @@ module Chromate
       enable-automation
     ].freeze
 
-    attr_accessor :user_data_dir, :headless, :xfvb, :native_control, :args, :headless_args, :xfvb_args, :exclude_switches, :proxy,
-                  :disable_features
+    attr_accessor :user_data_dir, :headless, :xfvb, :native_control, :startup_patch,
+                  :args, :headless_args, :xfvb_args, :exclude_switches, :proxy, :disable_features
 
     def initialize
       @user_data_dir      = File.expand_path('~/.config/google-chrome/Default')
       @headless           = true
       @xfvb               = false
       @native_control     = false
+      @startup_patch      = true
       @proxy              = nil
       @args               = [] + DEFAULT_ARGS
       @headless_args      = [] + HEADLESS_ARGS
@@ -78,6 +79,11 @@ module Chromate
     # @return [Chromate::Configuration]
     def config
       self.class.config
+    end
+
+    # @return [Boolean]
+    def patch?
+      @startup_patch
     end
 
     # @return [String]
