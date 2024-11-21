@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 require 'chromate/c_logger'
 require 'bot_browser/installer'

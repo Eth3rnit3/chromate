@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'chromate/helpers'
 require 'chromate/c_logger'
 require 'bot_browser/downloader'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BotBrowser
   class Downloader
     class << self
