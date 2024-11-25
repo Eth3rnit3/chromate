@@ -216,6 +216,30 @@ module Chromate
       [node_info['object']['objectId'], result['nodeId']]
     end
 
+    # @param [String] selector
+    # @option [Integer] root_id
+    # @return [Chromate::Element, nil]
+    def magick_find(selector, root_id = nil)
+      element = find(selector, root_id)
+      return element if element
+
+      find_in_shadow_recursively(selector)
+    end
+
+    # @param [String] selector
+    # @return [Chromate::Element, nil]
+    def find_in_shadow_recursively(selector)
+      # Si l'élément courant a un Shadow DOM, chercher dedans
+      shadow_children = find_shadow_children('*')
+      shadow_children.each do |child|
+        # Essayer de trouver l'élément dans ce niveau
+        found_element = child.find_element(selector) || child.find_in_shadow_recursively(selector)
+        return found_element if found_element
+      end
+
+      nil # Aucun élément trouvé
+    end
+
     def document
       @document ||= client.send_message('DOM.getDocument')
     end
