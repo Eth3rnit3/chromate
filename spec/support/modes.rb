@@ -14,6 +14,8 @@ module Support
         BotBrowser.install unless BotBrowser.installed?
         BotBrowser.load
         { headless: false, xfvb: false, native_control: false }
+      when 'debug'
+        { headless: false, xfvb: false, native_control: false }
       else
         { headless: true, xfvb: false, native_control: false }
       end

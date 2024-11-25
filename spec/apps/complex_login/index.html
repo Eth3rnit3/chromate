@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Sécurisé avec Shadow DOM Verrouillé</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a2e;
+            margin: 0;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <secure-login></secure-login>
+
+    <script>
+        // Classe de base pour les composants sécurisés
+        class SecureComponent extends HTMLElement {
+            constructor() {
+                super();
+                this._securityLevel = 0;
+                this._accessTokens = [];
+            }
+
+            // Méthode de vérification de sécurité
+            verifySecurityToken(token) {
+                return this._accessTokens.includes(token);
+            }
+
+            // Générer un token unique
+            generateSecurityToken() {
+                return btoa(Math.random().toString(36).substring(2));
+            }
+
+            // Augmenter le niveau de sécurité
+            incrementSecurityLevel() {
+                this._securityLevel++;
+            }
+        }
+
+        // Composant de login principal
+        class SecureLogin extends SecureComponent {
+            constructor() {
+                super();
+                this._shadowRoot = null;
+                this._attemptCount = 0;
+                this._maxAttempts = 3;
+            }
+
+            connectedCallback() {
+                this.render();
+            }
+
+            render() {
+                // Crée un Shadow DOM fermé
+                this._shadowRoot = this.attachShadow({ mode: 'closed' });
+                
+                // Contenu initial masqué
+                this._shadowRoot.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            width: 300px;
+                            background-color: #16213e;
+                            border-radius: 10px;
+                            padding: 20px;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                        }
+                        #locked-overlay {
+                            cursor: pointer;
+                            padding: 50px;
+                            background-color: #0f3460;
+                            border-radius: 10px;
+                        }
+                    </style>
+                    <div id="locked-overlay">
+                        🔒 Système Verrouillé
+                        <br><br>
+                        Cliquez pour déverrouiller
+                    </div>
+                `;
+
+                // Ajout d'un gestionnaire d'événement de déverrouillage initial
+                const overlay = this._shadowRoot.getElementById('locked-overlay');
+                overlay.addEventListener('click', () => this.initiateUnlocking());
+            }
+
+            initiateUnlocking() {
+                // Première étape : demander un code de défi
+                this.renderChallengeStep();
+            }
+
+            renderChallengeStep() {
+                // Génération d'un code de défi unique
+                const challengeCode = this.generateSecurityToken().substring(0, 6).toUpperCase();
+                
+                // Mise à jour du contenu du Shadow DOM
+                this._shadowRoot.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            width: 300px;
+                            background-color: #16213e;
+                            border-radius: 10px;
+                            padding: 20px;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                        }
+                        #challenge-container {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 15px;
+                        }
+                        input {
+                            padding: 10px;
+                            border-radius: 5px;
+                            border: none;
+                        }
+                        #challenge-code {
+                            font-size: 24px;
+                            color: #e94560;
+                            letter-spacing: 5px;
+                            background-color: #0f3460;
+                            padding: 10px;
+                            border-radius: 5px;
+                        }
+                    </style>
+                    <div id="challenge-container">
+                        <div>Défi de Sécurité</div>
+                        <div id="challenge-code">${challengeCode}</div>
+                        <input type="text" id="challenge-input" placeholder="Entrez le code ci-dessus">
+                        <button id="verify-challenge">Vérifier</button>
+                    </div>
+                `;
+
+                const verifyButton = this._shadowRoot.getElementById('verify-challenge');
+                const challengeInput = this._shadowRoot.getElementById('challenge-input');
+
+                verifyButton.addEventListener('click', () => {
+                    if (challengeInput.value.toUpperCase() === challengeCode) {
+                        this.renderLoginForm();
+                    } else {
+                        this._attemptCount++;
+                        challengeInput.style.borderColor = 'red';
+                        
+                        if (this._attemptCount >= this._maxAttempts) {
+                            this.renderLockout();
+                        }
+                    }
+                });
+            }
+
+            renderLoginForm() {
+                this._shadowRoot.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            width: 300px;
+                            background-color: #16213e;
+                            border-radius: 10px;
+                            padding: 20px;
+                            text-align: center;
+                        }
+                        input, button {
+                            width: 100%;
+                            padding: 10px;
+                            margin: 10px 0;
+                            border-radius: 5px;
+                            border: none;
+                        }
+                        button {
+                            background-color: #e94560;
+                            color: white;
+                            cursor: pointer;
+                        }
+                    </style>
+                    <form id="login-form">
+                        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+                        <input type="password" id="password" placeholder="Mot de passe" required>
+                        <button type="submit">Connexion</button>
+                    </form>
+                `;
+
+                const loginForm = this._shadowRoot.getElementById('login-form');
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = this._shadowRoot.getElementById('username').value;
+                    const password = this._shadowRoot.getElementById('password').value;
+                    
+                    // Simulation de validation (à remplacer par une vraie logique)
+                    if (username === 'admin' && password === 'password') {
+                        this.renderSecureZone();
+                    } else {
+                        alert('Identifiants incorrects');
+                    }
+                });
+            }
+
+            renderSecureZone() {
+                // Création d'un token d'accès
+                const accessToken = this.generateSecurityToken();
+                this._accessTokens.push(accessToken);
+
+                this._shadowRoot.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            width: 300px;
+                            background-color: #16213e;
+                            border-radius: 10px;
+                            padding: 20px;
+                            text-align: center;
+                            color: #e94560;
+                        }
+                    </style>
+                    <div>
+                        <h2>Zone Sécurisée</h2>
+                        <p>Accès autorisé</p>
+                        <small>Token: ${accessToken.substring(0, 10)}...</small>
+                    </div>
+                `;
+            }
+
+            renderLockout() {
+                this._shadowRoot.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            width: 300px;
+                            background-color: #830000;
+                            border-radius: 10px;
+                            padding: 20px;
+                            text-align: center;
+                            color: white;
+                        }
+                    </style>
+                    <div>
+                        <h2>🚫 Accès Bloqué</h2>
+                        <p>Trop de tentatives incorrectes</p>
+                        <small>Réessayez dans 5 minutes</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Enregistrement du composant personnalisé
+        customElements.define('secure-login', SecureLogin);
+    </script>
+</body>
+</html>
