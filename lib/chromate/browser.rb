@@ -81,7 +81,7 @@ module Chromate
 
       patch if config.patch?
 
-      set_hardwares
+      update_config!
 
       self
     end
@@ -92,8 +92,8 @@ module Chromate
 
     # @return [self]
     def stop
-      stop_process(@process)        if @process
       stop_process(@record_process) if @record_process
+      stop_process(@process)        if @process
       stop_process(@xfvb_process)   if @xfvb_process
       @client&.stop
 
@@ -141,6 +141,17 @@ module Chromate
     def set_hardwares
       config.mouse_controller = Hardwares.mouse(client: @client, element: nil)
       config.keyboard_controller = Hardwares.keyboard(client: @client, element: nil)
+    end
+
+    # @return [void]
+    def update_config!
+      config.args = @args
+      config.user_data_dir = @user_data_dir
+      config.headless = @headless
+      config.xfvb = @xfvb
+      config.native_control = @native_control
+
+      set_hardwares
     end
 
     # @param pid [Integer] PID of the process to stop

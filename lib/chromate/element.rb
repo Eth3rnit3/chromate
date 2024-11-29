@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require 'chromate/elements/tags'
+
 module Chromate
   class Element
+    include Elements::Tags
+
     class NotFoundError < StandardError
       def initialize(selector, root_id)
         super("Element not found with selector: #{selector} under root_id: #{root_id}")
@@ -52,6 +56,12 @@ module Chromate
     end
 
     # @return [String]
+    def value
+      result = client.send_message('Runtime.callFunctionOn', functionDeclaration: 'function() { return this.value; }', objectId: @object_id)
+      result['result']['value']
+    end
+
+    # @return [String]
     def html
       html = client.send_message('DOM.getOuterHTML', objectId: @object_id)
       html['outerHTML']
@@ -61,6 +71,14 @@ module Chromate
     def attributes
       result = client.send_message('DOM.getAttributes', nodeId: @node_id)
       Hash[*result['attributes']]
+    end
+
+    # @return [String]
+    def tag_name
+      result = client.send_message('Runtime.callFunctionOn',
+                                   functionDeclaration: 'function() { return this.tagName.toLowerCase(); }',
+                                   objectId: @object_id)
+      result['result']['value']
     end
 
     # @param [String] name

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'chromate/element'
+require 'chromate/elements/option'
 
 module Chromate
   module Elements
@@ -8,18 +9,18 @@ module Chromate
       # @param [String] value
       # @return [self]
       def select_option(value)
-        script = javascript
+        click
 
-        client.send_message('Runtime.callFunctionOn',
-                            functionDeclaration: script,
-                            objectId: @object_id,
-                            arguments: [{ value: value }])
+        unless Chromate.configuration.native_control
+          client.send_message('Runtime.callFunctionOn',
+                              functionDeclaration: javascript,
+                              objectId: @object_id,
+                              arguments: [{ value: value }])
+        end
+
+        Option.new(value, client).click
 
         self
-      rescue StandardError => e
-        raise ArgumentError, "Option '#{value}' not found in select" if e.message.include?('Option')
-
-        raise e
       end
 
       # @return [String|nil]
@@ -40,6 +41,8 @@ module Chromate
                                      objectId: @object_id)
         result.dig('result', 'value')
       end
+
+      private
 
       # @return [String]
       def javascript

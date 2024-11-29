@@ -11,7 +11,14 @@ module Chromate
       # @param selector [String] CSS selector
       # @return [Chromate::Element]
       def find_element(selector)
-        Chromate::Element.new(selector, @client)
+        base_element = Chromate::Element.new(selector, @client)
+        return base_element if base_element.base?
+
+        if base_element.select?
+          Chromate::Elements::Select.new(selector, @client)
+        elsif base_element.option?
+          Chromate::Elements::Option.new(base_element.value, @client)
+        end
       end
 
       # @param selector [String] CSS selector
