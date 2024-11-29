@@ -25,7 +25,7 @@ module Support
         thread = Thread.new { server.start }
 
         @@servers << { server: server, thread: thread }
-        @@server_urls[File.basename(directory)] = "http://localhost:#{port}"
+        @@server_urls[File.basename(directory)] = "http://127.0.0.1:#{port}"
         Chromate::CLogger.log("Server started for #{directory} on port #{port}")
       end
 
