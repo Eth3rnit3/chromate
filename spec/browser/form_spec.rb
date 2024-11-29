@@ -9,7 +9,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['fill_form']
     browser.navigate_to(url)
-    browser.refresh
     browser.find_element('#first-name').type('John')
     browser.find_element('#last-name').type('Doe')
     browser.select_option('#gender', 'female')

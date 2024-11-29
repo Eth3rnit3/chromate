@@ -9,7 +9,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_clicked']
     browser.navigate_to(url)
-    browser.refresh
     browser.click_element('#interactive-button')
     browser.screenshot('spec/apps/where_clicked/click.png')
 
@@ -21,7 +20,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#red')
     browser.screenshot('spec/apps/where_moved/hover_element_red.png')
 
@@ -33,7 +31,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#blue')
     browser.screenshot('spec/apps/where_moved/hover_element_blue.png')
 
@@ -45,7 +42,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#green')
     browser.screenshot('spec/apps/where_moved/hover_element_green.png')
 
@@ -57,7 +53,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#yellow')
     browser.screenshot('spec/apps/where_moved/hover_element_yellow.png')
 
@@ -69,7 +64,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#red')
     browser.hover_element('#yellow')
     browser.hover_element('#green')
@@ -84,7 +78,6 @@ RSpec.describe 'Mouse' do
     browser.start
     url = server_urls['drag_and_drop']
     browser.navigate_to(url)
-    browser.refresh
     blue_square = browser.find_element('#draggable')
     green_square = browser.find_element('#dropzone')
 

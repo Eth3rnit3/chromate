@@ -9,7 +9,6 @@ RSpec.describe 'Dom actions' do
     browser.start
     @url = server_urls['dom_actions']
     browser.navigate_to(@url)
-    browser.refresh
   end
 
   after(:each) do

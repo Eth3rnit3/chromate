@@ -40,7 +40,6 @@ class TestInDocker
   def click_features
     url = server_urls['where_clicked']
     browser.navigate_to(url)
-    browser.refresh
     browser.click_element('#interactive-button')
     sleep 1
   end
@@ -48,7 +47,6 @@ class TestInDocker
   def move_features
     url = server_urls['where_moved']
     browser.navigate_to(url)
-    browser.refresh
     browser.hover_element('#red')
     browser.hover_element('#yellow')
     browser.hover_element('#green')
@@ -59,7 +57,6 @@ class TestInDocker
   def drag_and_drop_features
     url = server_urls['drag_and_drop']
     browser.navigate_to(url)
-    browser.refresh
     blue_square = browser.find_element('#draggable')
     green_square = browser.find_element('#dropzone')
     blue_square.drop_to(green_square)
@@ -69,7 +66,6 @@ class TestInDocker
   def fill_form_features
     url = server_urls['fill_form']
     browser.navigate_to(url)
-    browser.refresh
     browser.find_element('#first-name').type('John')
     browser.find_element('#last-name').type('Doe')
     browser.select_option('#gender', 'female')
@@ -81,7 +77,6 @@ class TestInDocker
   def shadow_dom_features
     url = server_urls['shadow_checkbox']
     browser.navigate_to(url)
-    browser.refresh
     shadow_container = browser.find_element('#shadow-container')
     checkbox = shadow_container.find_shadow_child('#shadow-checkbox')
     checkbox.click
