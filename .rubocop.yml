@@ -5,6 +5,7 @@ AllCops:
     - 'Rakefile'
     - 'bin/**/*'
     - 'vendor/**/*'
+    - 'spec/support/**/*'
     - 'docker_root/**/*'
 
 Style/StringLiterals:
