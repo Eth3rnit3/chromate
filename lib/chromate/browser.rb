@@ -43,7 +43,6 @@ module Chromate
       @native_control = @options.fetch(:native_control)
       @record         = @options.fetch(:record, false)
       @binary         = nil
-      @xfvb_process   = nil
       @record_process = nil
       @client         = nil
       @args           = []
@@ -94,12 +93,10 @@ module Chromate
     def stop
       stop_process(@record_process) if @record_process
       @binary.stop                  if @binary&.started?
-      stop_process(@xfvb_process)   if @xfvb_process
       @client&.stop
 
-      @process = nil
+      @binary = nil
       @record_process = nil
-      @xfvb_process = nil
 
       self
     end
