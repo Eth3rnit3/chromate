@@ -5,5 +5,7 @@ module Chromate
     class ChromateError < StandardError; end
     class InvalidBrowserError < ChromateError; end
     class InvalidPlatformError < ChromateError; end
+    class ConnectionTimeoutError < StandardError; end
+    class DebugURLError < StandardError; end
   end
 end

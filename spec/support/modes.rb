@@ -16,8 +16,8 @@ module Support
         {
           headless: false,
           xfvb: false,
-          native_control: true,
-          record: "spec/video-records/#{example_name}.mp4",
+          native_control: false,
+          record: false,
           user_data_dir: USER_DATA_DIR
         }
       when 'docker-xvfb'

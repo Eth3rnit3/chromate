@@ -6,6 +6,7 @@ require 'securerandom'
 require 'net/http'
 require 'websocket-client-simple'
 require_relative 'helpers'
+require_relative 'binary'
 require_relative 'client'
 require_relative 'element'
 require_relative 'hardwares'
@@ -41,14 +42,11 @@ module Chromate
       @xfvb           = @options.fetch(:xfvb)
       @native_control = @options.fetch(:native_control)
       @record         = @options.fetch(:record, false)
-      @process        = nil
+      @binary         = nil
       @xfvb_process   = nil
       @record_process = nil
       @client         = nil
-      @args           = [
-        @chrome_path,
-        "--user-data-dir=#{@user_data_dir}"
-      ]
+      @args           = []
 
       trap('INT') { stop_and_exit }
       trap('TERM') { stop_and_exit }
@@ -72,7 +70,8 @@ module Chromate
 
       Hardwares::MouseController.reset_mouse_position
       Chromate::CLogger.log("Starting browser with args: #{@args}", level: :debug)
-      @process = spawn(*@args, err: 'chrome_errors.log', out: 'chrome_output.log')
+      @binary = Binary.new(@chrome_path, @args)
+      @binary.start
       sleep 2
 
       @client.start
@@ -86,14 +85,15 @@ module Chromate
       self
     end
 
+    # @return [Boolean]
     def started?
-      @process ? true : false
+      @binary.started?
     end
 
     # @return [self]
     def stop
       stop_process(@record_process) if @record_process
-      stop_process(@process)        if @process
+      @binary.stop                  if @binary&.started?
       stop_process(@xfvb_process)   if @xfvb_process
       @client&.stop
 
@@ -126,14 +126,15 @@ module Chromate
       exclude_switches = config.exclude_switches || []
       exclude_switches += @options[:exclude_switches] if @options[:exclude_switches]
 
-      if @options.dig(:options, :args)
-        @args += @options[:options][:args]
-        @args << "--exclude-switches=#{exclude_switches.join(",")}" if exclude_switches.any?
-        return @args
-      end
-      @args += config.generate_arguments(**@options)
+      @args = if @options.dig(:options, :args)
+                @options[:options][:args]
+              else
+                config.generate_arguments(**@options)
+              end
+
       @args << "--user-agent=#{@options[:user_agent] || UserAgent.call}"
       @args << "--exclude-switches=#{exclude_switches.join(",")}" if exclude_switches.any?
+      @args << "--user-data-dir=#{@user_data_dir}"
 
       @args
     end
