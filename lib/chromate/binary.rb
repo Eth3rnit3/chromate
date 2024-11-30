@@ -4,6 +4,14 @@ require 'open3'
 
 module Chromate
   class Binary
+    def self.run(path, args)
+      command = [path] + args
+      stdout, stderr, status = Open3.capture3(*command)
+      raise stderr unless status.success?
+
+      stdout
+    end
+
     attr_reader :pid
 
     # @param [String] path

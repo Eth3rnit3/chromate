@@ -35,7 +35,7 @@ module BotBrowser
 
       def create_config_dir
         Chromate::CLogger.log("Creating config directory at #{config_dir}")
-        `mkdir -p #{config_dir}`
+        FileUtils.mkdir_p(config_dir)
       end
 
       def install_profile(profile_path)
@@ -46,24 +46,24 @@ module BotBrowser
       end
 
       def install_binary_mac(binary_path)
-        `hdiutil attach #{binary_path}`
-        `cp -r /Volumes/Chromium/Chromium.app /Applications/`
-        `hdiutil detach /Volumes/Chromium`
-        `xattr -rd com.apple.quarantine /Applications/Chromium.app`
-        `codesign --force --deep --sign - /Applications/Chromium.app`
+        Chromate::Binary.run('hdiutil', ['attach', binary_path])
+        Chromate::Binary.run('cp', ['-r', '/Volumes/Chromium/Chromium.app', '/Applications/'])
+        Chromate::Binary.run('hdiutil', ['detach', '/Volumes/Chromium'])
+        Chromate::Binary.run('xattr', ['-rd', 'com.apple.quarantine', '/Applications/Chromium.app'])
+        Chromate::Binary.run('codesign', ['--force', '--deep', '--sign', '-', '/Applications/Chromium.app'])
 
         '/Applications/Chromium.app/Contents/MacOS/Chromium'
       end
 
       def install_binary_linux(binary_path)
-        `sudo dpkg -i #{binary_path}`
-        `sudo apt-get install -f`
+        Chromate::Binary.run('sudo', ['dpkg', '-i', binary_path])
+        Chromate::Binary.run('sudo', ['apt-get', 'install', '-f'])
 
         '/usr/bin/chromium'
       end
 
       def install_binary_windows(binary_path)
-        `7z x #{binary_path}`
+        Chromate::Binary.run('7z', ['x', binary_path])
 
         'chromium.exe'
       end

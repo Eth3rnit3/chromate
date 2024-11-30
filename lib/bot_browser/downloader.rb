@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'chromate/binary'
+
 module BotBrowser
   class Downloader
     class << self
@@ -16,7 +18,7 @@ module BotBrowser
 
       def download_file(url, path)
         Chromate::CLogger.log("Downloading #{url} to #{path}")
-        `curl -L #{url} >> #{path}`
+        Chromate::Binary.run('curl', ['-L', url, '-o', path])
 
         path
       end
