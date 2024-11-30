@@ -17,7 +17,7 @@ module Chromate
     # @return [self]
     def start
       command = [@path] + @args
-      stdin, stdout, stderr, wait_thr = Open3.popen3(*command)
+      _stdin, _stdout, _stderr, wait_thr = Open3.popen3(*command)
       CLogger.log("Started process with pid #{wait_thr.pid}", level: :debug)
       Process.detach(wait_thr.pid)
       CLogger.log("Process detached with pid #{wait_thr.pid}", level: :debug)
