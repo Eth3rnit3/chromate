@@ -50,7 +50,7 @@ module BotBrowser
         Chromate::Binary.run('cp', ['-r', '/Volumes/Chromium/Chromium.app', '/Applications/'])
         Chromate::Binary.run('hdiutil', ['detach', '/Volumes/Chromium'])
         Chromate::Binary.run('xattr', ['-rd', 'com.apple.quarantine', '/Applications/Chromium.app'])
-        Chromate::Binary.run('codesign', ['--force', '--deep', '--sign', '-', '/Applications/Chromium.app'])
+        Chromate::Binary.run('codesign', ['--force', '--deep', '--sign', '-', '/Applications/Chromium.app'], need_success: false)
 
         '/Applications/Chromium.app/Contents/MacOS/Chromium'
       end

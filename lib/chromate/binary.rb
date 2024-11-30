@@ -4,10 +4,10 @@ require 'open3'
 
 module Chromate
   class Binary
-    def self.run(path, args)
+    def self.run(path, args, need_success: true)
       command = [path] + args
       stdout, stderr, status = Open3.capture3(*command)
-      raise stderr unless status.success?
+      raise stderr if need_success && !status.success?
 
       stdout
     end
@@ -37,6 +37,14 @@ module Chromate
     # @return [Boolean]
     def started?
       !@pid.nil?
+    end
+
+    def running?
+      return false unless started?
+
+      Process.getpgid(@pid).is_a?(Integer)
+    rescue Errno::ESRCH
+      false
     end
 
     # @return [self]
