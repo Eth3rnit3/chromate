@@ -19,7 +19,7 @@ RSpec.describe Chromate::Elements::Tags do
         @properties[name]
       end
 
-      def set_tag(name)
+      def tag!(name)
         @tag_name = name
       end
 
@@ -35,7 +35,7 @@ RSpec.describe Chromate::Elements::Tags do
 
   describe '#select?' do
     context 'when element is a select' do
-      before { element.set_tag('select') }
+      before { element.tag!('select') }
 
       it 'returns true' do
         expect(element.select?).to be true
@@ -43,7 +43,7 @@ RSpec.describe Chromate::Elements::Tags do
     end
 
     context 'when element is not a select' do
-      before { element.set_tag('div') }
+      before { element.tag!('div') }
 
       it 'returns false' do
         expect(element.select?).to be false
@@ -53,7 +53,7 @@ RSpec.describe Chromate::Elements::Tags do
 
   describe '#option?' do
     context 'when element is an option' do
-      before { element.set_tag('option') }
+      before { element.tag!('option') }
 
       it 'returns true' do
         expect(element.option?).to be true
@@ -61,7 +61,7 @@ RSpec.describe Chromate::Elements::Tags do
     end
 
     context 'when element is not an option' do
-      before { element.set_tag('div') }
+      before { element.tag!('div') }
 
       it 'returns false' do
         expect(element.option?).to be false
@@ -72,7 +72,7 @@ RSpec.describe Chromate::Elements::Tags do
   describe '#radio?' do
     context 'when element is a radio input' do
       before do
-        element.set_tag('input')
+        element.tag!('input')
         element.set_property('type', 'radio')
       end
 
@@ -83,7 +83,7 @@ RSpec.describe Chromate::Elements::Tags do
 
     context 'when element is not a radio input' do
       before do
-        element.set_tag('input')
+        element.tag!('input')
         element.set_property('type', 'text')
       end
 
@@ -96,7 +96,7 @@ RSpec.describe Chromate::Elements::Tags do
   describe '#checkbox?' do
     context 'when element is a checkbox input' do
       before do
-        element.set_tag('input')
+        element.tag!('input')
         element.set_property('type', 'checkbox')
       end
 
@@ -107,7 +107,7 @@ RSpec.describe Chromate::Elements::Tags do
 
     context 'when element is not a checkbox input' do
       before do
-        element.set_tag('input')
+        element.tag!('input')
         element.set_property('type', 'text')
       end
 
@@ -119,7 +119,7 @@ RSpec.describe Chromate::Elements::Tags do
 
   describe '#base?' do
     context 'when element is a basic element' do
-      before { element.set_tag('div') }
+      before { element.tag!('div') }
 
       it 'returns true' do
         expect(element.base?).to be true
@@ -128,7 +128,7 @@ RSpec.describe Chromate::Elements::Tags do
 
     %w[select option].each do |tag|
       context "when element is a #{tag}" do
-        before { element.set_tag(tag) }
+        before { element.tag!(tag) }
 
         it 'returns false' do
           expect(element.base?).to be false
@@ -139,7 +139,7 @@ RSpec.describe Chromate::Elements::Tags do
     [%w[radio radio], %w[checkbox checkbox]].each do |type, name|
       context "when element is a #{name} input" do
         before do
-          element.set_tag('input')
+          element.tag!('input')
           element.set_property('type', type)
         end
 
