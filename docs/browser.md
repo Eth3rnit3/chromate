@@ -112,19 +112,35 @@ It will call `#xvfb_screenshot` private method if `xvfb` mode is `true`
 
 #### `#find_element(selector)`
 
-Finds a single element on the page using the specified CSS selector.
+Finds a single element on the page using the specified CSS selector. Returns a specialized element class based on the element type:
 
 - **Parameters:**
   - `selector` (String): The CSS selector to locate the element.
 
 - **Returns:**
-  - `Chromate::Element`: The found element.
+  - `Chromate::Elements::Select`: For `<select>` elements
+  - `Chromate::Elements::Option`: For `<option>` elements
+  - `Chromate::Elements::Radio`: For radio button inputs (`<input type="radio">`)
+  - `Chromate::Elements::Checkbox`: For checkbox inputs (`<input type="checkbox">`)
+  - `Chromate::Element`: For all other element types
 
-- **Example:**
-  ```ruby
-  element = browser.find_element('#my-element')
-  puts element.text
-  ```
+Each specialized element type provides specific methods for interacting with that type of element. For example:
+
+```ruby
+# Working with radio buttons
+radio = browser.find_element('input[type="radio"]')
+radio.check if !radio.checked?
+
+# Working with checkboxes
+checkbox = browser.find_element('input[type="checkbox"]')
+checkbox.toggle
+
+# Working with select elements
+select = browser.find_element('select#country')
+select.select_option('France')
+```
+
+See the [Element documentation](element.md) for more details about specialized elements.
 
 #### `#click_element(selector)`
 
@@ -217,4 +233,3 @@ browser.screenshot('example.png')
 element = browser.find_element('#main-header')
 puts element.text
 browser.stop
-```
