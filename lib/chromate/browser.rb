@@ -188,7 +188,6 @@ module Chromate
         # If the process does not stop gracefully, send SIGKILL
         CLogger.log("Process #{pid} did not stop gracefully. Sending SIGKILL...", level: :debug)
         Process.kill('KILL', pid)
-        Process.wait(pid)
       end
     rescue Errno::ESRCH
       # The process has already stopped
