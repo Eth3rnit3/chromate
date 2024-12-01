@@ -7,6 +7,7 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |file| require 
 RSpec.configure do |config|
   include Support::Server
   include Support::ClientHelper
+  include Support::CleanupHelper
 
   config.example_status_persistence_file_path = '.rspec_status'
   config.disable_monkey_patching!
@@ -26,5 +27,9 @@ RSpec.configure do |config|
   config.after(:suite) do |_example|
     Chromate::CLogger.log('Stopping test servers')
     stop_servers
+  end
+
+  config.after(:each) do
+    reset_client_mocks
   end
 end
