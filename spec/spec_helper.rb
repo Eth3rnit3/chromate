@@ -6,6 +6,8 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |file| require 
 
 RSpec.configure do |config|
   include Support::Server
+  include Support::ClientHelper
+
   config.example_status_persistence_file_path = '.rspec_status'
   config.disable_monkey_patching!
 
