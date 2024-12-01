@@ -22,24 +22,7 @@ RSpec.describe Chromate::Element do
     allow(mouse_controller).to receive(:set_element).and_return(mouse_controller)
     allow(keyboard_controller).to receive(:set_element).and_return(keyboard_controller)
 
-    # Mock par défaut pour le document
-    allow(client).to receive(:send_message).with('DOM.getDocument').and_return({ 'root' => { 'nodeId' => root_id } })
-
-    # Mock par défaut pour la recherche d'élément
-    allow(client).to receive(:send_message)
-      .with('DOM.querySelector', any_args)
-      .and_return({ 'nodeId' => node_id })
-    allow(client).to receive(:send_message)
-      .with('DOM.resolveNode', any_args)
-      .and_return({ 'object' => { 'objectId' => object_id } })
-
-    # Mock par défaut pour le shadow DOM
-    allow(client).to receive(:send_message)
-      .with('DOM.describeNode', any_args)
-      .and_return({ 'node' => { 'shadowRoots' => [] } })
-    allow(client).to receive(:send_message)
-      .with('DOM.querySelectorAll', any_args)
-      .and_return({ 'nodeIds' => [] })
+    mock_default_element_responses(client, root_id: root_id, node_id: node_id, object_id: object_id)
   end
 
   subject(:element) { described_class.new(selector, client) }
@@ -52,18 +35,7 @@ RSpec.describe Chromate::Element do
 
     context 'when element is not found' do
       before do
-        # Réinitialiser tous les mocks par défaut
-        allow(client).to receive(:send_message).with(any_args).and_return({})
-
-        # Mock spécifique pour le document
-        allow(client).to receive(:send_message)
-          .with('DOM.getDocument')
-          .and_return({ 'root' => { 'nodeId' => root_id } })
-
-        # Mock pour l'échec de la recherche
-        allow(client).to receive(:send_message)
-          .with('DOM.querySelector', nodeId: root_id, selector: selector)
-          .and_return({ 'nodeId' => nil })
+        mock_element_not_found(client, root_id: root_id, selector: selector)
       end
 
       it 'raises NotFoundError' do
@@ -74,12 +46,7 @@ RSpec.describe Chromate::Element do
 
   describe '#text' do
     before do
-      allow(client).to receive(:send_message)
-        .with('Runtime.callFunctionOn',
-              hash_including(functionDeclaration: 'function() { return this.innerText; }',
-                             objectId: object_id,
-                             returnByValue: true))
-        .and_return({ 'result' => { 'value' => 'Test Text' } })
+      mock_element_text(client, object_id: object_id, text: 'Test Text')
     end
 
     it 'returns the element text content' do
@@ -89,12 +56,7 @@ RSpec.describe Chromate::Element do
 
   describe '#value' do
     before do
-      allow(client).to receive(:send_message)
-        .with('Runtime.callFunctionOn',
-              hash_including(functionDeclaration: 'function() { return this.value; }',
-                             objectId: object_id,
-                             returnByValue: true))
-        .and_return({ 'result' => { 'value' => 'Test Value' } })
+      mock_element_value(client, object_id: object_id, value: 'Test Value')
     end
 
     it 'returns the element value' do
@@ -146,7 +108,7 @@ RSpec.describe Chromate::Element do
 
   describe '#type' do
     before do
-      allow(client).to receive(:send_message).with('DOM.focus', nodeId: node_id)
+      mock_element_focus(client, node_id: node_id)
       allow(keyboard_controller).to receive(:type)
     end
 
