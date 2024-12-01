@@ -12,43 +12,46 @@ radio = Chromate::Elements::Radio.new(selector, client, **options)
   - `selector` (String): The CSS selector used to locate the radio button.
   - `client` (Chromate::Client): An instance of the CDP client.
   - `options` (Hash): Additional options passed to the Element constructor.
+    - `object_id` (String): Optional. The object ID of a pre-searched element.
+    - `node_id` (Integer): Optional. The node ID of a pre-searched element.
+    - `root_id` (Integer): Optional. The root ID of a pre-searched element.
 
 ### Public Methods
 
-#### `#selected?`
+#### `#checked?`
 
-Returns whether the radio button is currently selected.
+Returns whether the radio button is currently checked.
 
 - **Returns:**
-  - `Boolean`: `true` if the radio button is selected, `false` otherwise.
+  - `Boolean`: `true` if the radio button is checked, `false` otherwise.
 
 - **Example:**
   ```ruby
-  if radio.selected?
-    puts "Radio button is selected"
+  if radio.checked?
+    puts "Radio button is checked"
   end
   ```
 
-#### `#select`
+#### `#check`
 
-Selects the radio button if it's not already selected.
+Checks the radio button if it's not already checked.
 
 - **Returns:**
   - `self`: Returns the radio element for method chaining.
 
 - **Example:**
   ```ruby
-  radio.select
+  radio.check
   ```
 
-#### `#unselect`
+#### `#uncheck`
 
-Unselects the radio button if it's currently selected.
+Unchecks the radio button if it's currently checked.
 
 - **Returns:**
   - `self`: Returns the radio element for method chaining.
 
 - **Example:**
   ```ruby
-  radio.unselect
+  radio.uncheck
   ```
