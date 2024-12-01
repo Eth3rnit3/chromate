@@ -13,9 +13,7 @@ RSpec.describe Chromate::Elements::Tags do
         @client = client
       end
 
-      def tag_name
-        @tag_name
-      end
+      attr_reader :tag_name
 
       def property(name)
         @properties[name]
@@ -32,7 +30,7 @@ RSpec.describe Chromate::Elements::Tags do
     end
   end
 
-  let(:client) { instance_double('Chromate::Client') }
+  let(:client) { instance_double(Chromate::Client) }
   subject(:element) { test_class.new(client) }
 
   describe '#select?' do
@@ -128,7 +126,7 @@ RSpec.describe Chromate::Elements::Tags do
       end
     end
 
-    ['select', 'option'].each do |tag|
+    %w[select option].each do |tag|
       context "when element is a #{tag}" do
         before { element.set_tag(tag) }
 
@@ -138,7 +136,7 @@ RSpec.describe Chromate::Elements::Tags do
       end
     end
 
-    [['radio', 'radio'], ['checkbox', 'checkbox']].each do |type, name|
+    [%w[radio radio], %w[checkbox checkbox]].each do |type, name|
       context "when element is a #{name} input" do
         before do
           element.set_tag('input')

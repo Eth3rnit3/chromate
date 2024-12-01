@@ -4,15 +4,15 @@ require 'spec_helper'
 
 RSpec.describe Chromate::Element do
   let(:selector) { '#test-element' }
-  let(:client) { instance_double('Chromate::Client') }
-  let(:mouse_controller) { instance_double('Chromate::Hardwares::MouseController') }
-  let(:keyboard_controller) { instance_double('Chromate::Hardwares::KeyboardController') }
+  let(:client) { instance_double(Chromate::Client) }
+  let(:mouse_controller) { instance_double(Chromate::Hardwares::MouseController) }
+  let(:keyboard_controller) { instance_double(Chromate::Hardwares::KeyboardController) }
   let(:node_id) { 123 }
   let(:object_id) { 'object-123' }
   let(:root_id) { 456 }
 
   let(:configuration) do
-    instance_double('Chromate::Configuration',
+    instance_double(Chromate::Configuration,
                     mouse_controller: mouse_controller,
                     keyboard_controller: keyboard_controller)
   end
@@ -219,8 +219,8 @@ RSpec.describe Chromate::Element do
     end
 
     it 'simulates pressing enter and submits parent form' do
-      expect(keyboard_controller).to receive(:press_key).with('Enter')
       element.press_enter
+      expect(keyboard_controller).to have_received(:press_key).with('Enter')
     end
   end
 end

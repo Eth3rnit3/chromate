@@ -4,15 +4,15 @@ require 'spec_helper'
 
 RSpec.describe Chromate::Elements::Select do
   let(:selector) { '#test-select' }
-  let(:client) { instance_double('Chromate::Client') }
-  let(:mouse_controller) { instance_double('Chromate::Hardwares::MouseController') }
-  let(:keyboard_controller) { instance_double('Chromate::Hardwares::KeyboardController') }
+  let(:client) { instance_double(Chromate::Client) }
+  let(:mouse_controller) { instance_double(Chromate::Hardwares::MouseController) }
+  let(:keyboard_controller) { instance_double(Chromate::Hardwares::KeyboardController) }
   let(:node_id) { 123 }
   let(:object_id) { 'object-123' }
   let(:root_id) { 456 }
 
   let(:configuration) do
-    instance_double('Chromate::Configuration',
+    instance_double(Chromate::Configuration,
                     mouse_controller: mouse_controller,
                     keyboard_controller: keyboard_controller,
                     native_control: native_control)
@@ -50,9 +50,9 @@ RSpec.describe Chromate::Elements::Select do
       # Mock pour l'évaluation du script JavaScript
       allow(client).to receive(:send_message)
         .with('Runtime.callFunctionOn', hash_including(
-          objectId: object_id,
-          returnByValue: true
-        ))
+                                          objectId: object_id,
+                                          returnByValue: true
+                                        ))
         .and_return({ 'result' => { 'value' => nil } })
 
       # Mock pour le scrollIntoView
