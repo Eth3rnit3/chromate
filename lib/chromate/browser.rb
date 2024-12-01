@@ -53,8 +53,6 @@ module Chromate
 
       trap('INT') { stop_and_exit }
       trap('TERM') { stop_and_exit }
-
-      at_exit { stop }
     end
 
     # @return [self]
