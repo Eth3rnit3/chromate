@@ -5,9 +5,13 @@ require 'chromate/element'
 module Chromate
   module Elements
     class Radio < Element
-      def initialize(selector, client, **options)
-        super
-        raise InvalidSelectorError, selector unless radio?
+      def initialize(selector = nil, client = nil, **options)
+        if selector
+          super
+          raise InvalidSelectorError, selector unless radio?
+        else
+          super(**options)
+        end
       end
 
       # @return [Boolean]

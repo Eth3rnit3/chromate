@@ -17,7 +17,7 @@ module Chromate
         super("Unable to resolve element with selector: #{selector}")
       end
     end
-    attr_reader :selector, :client
+    attr_reader :selector, :client, :root_id, :object_id, :node_id
 
     # @param [String] selector
     # @param [Chromate::Client] client
