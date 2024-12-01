@@ -15,40 +15,40 @@ radio = Chromate::Elements::Radio.new(selector, client, **options)
 
 ### Public Methods
 
-#### `#checked?`
+#### `#selected?`
 
-Returns whether the radio button is currently checked.
+Returns whether the radio button is currently selected.
 
 - **Returns:**
-  - `Boolean`: `true` if the radio button is checked, `false` otherwise.
+  - `Boolean`: `true` if the radio button is selected, `false` otherwise.
 
 - **Example:**
   ```ruby
-  if radio.checked?
-    puts "Radio button is checked"
+  if radio.selected?
+    puts "Radio button is selected"
   end
   ```
 
-#### `#check`
+#### `#select`
 
-Checks the radio button if it's not already checked.
+Selects the radio button if it's not already selected.
 
 - **Returns:**
   - `self`: Returns the radio element for method chaining.
 
 - **Example:**
   ```ruby
-  radio.check
+  radio.select
   ```
 
-#### `#uncheck`
+#### `#unselect`
 
-Unchecks the radio button if it's currently checked.
+Unselects the radio button if it's currently selected.
 
 - **Returns:**
   - `self`: Returns the radio element for method chaining.
 
 - **Example:**
   ```ruby
-  radio.uncheck
+  radio.unselect
   ```

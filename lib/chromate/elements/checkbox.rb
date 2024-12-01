@@ -11,11 +11,6 @@ module Chromate
       end
 
       # @return [Boolean]
-      def checkbox?
-        tag_name == 'input' && attributes['type'] == 'checkbox'
-      end
-
-      # @return [Boolean]
       def checked?
         attributes['checked'] == 'true'
       end
@@ -23,18 +18,21 @@ module Chromate
       # @return [self]
       def check
         click unless checked?
+
         self
       end
 
       # @return [self]
       def uncheck
         click if checked?
+
         self
       end
 
       # @return [self]
       def toggle
         click
+
         self
       end
     end

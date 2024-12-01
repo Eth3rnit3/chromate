@@ -15,11 +15,6 @@ module Chromate
       end
 
       # @return [Boolean]
-      def radio?
-        tag_name == 'input' && attributes['type'] == 'radio'
-      end
-
-      # @return [Boolean]
       def checked?
         attributes['checked'] == 'true'
       end
@@ -27,12 +22,14 @@ module Chromate
       # @return [self]
       def check
         click unless checked?
+
         self
       end
 
       # @return [self]
       def uncheck
         click if checked?
+
         self
       end
     end

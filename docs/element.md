@@ -15,6 +15,43 @@ element = Chromate::Element.new(selector, client, node_id: nil, object_id: nil, 
   - `object_id` (String, optional): The object ID of the element.
   - `root_id` (Integer, optional): The root node ID of the document.
 
+### Attributes
+
+#### `#selector`
+
+Returns the CSS selector used to locate the element.
+
+- **Returns:**
+  - `String`: The CSS selector.
+
+#### `#client`
+
+Returns the CDP client instance used to communicate with the browser.
+
+- **Returns:**
+  - `Chromate::Client`: The CDP client instance.
+
+#### `#root_id`
+
+Returns the root node ID of the document.
+
+- **Returns:**
+  - `Integer`: The root node ID.
+
+#### `#object_id`
+
+Returns the object ID of the element.
+
+- **Returns:**
+  - `String`: The object ID.
+
+#### `#node_id`
+
+Returns the node ID of the element.
+
+- **Returns:**
+  - `Integer`: The node ID.
+
 ### Public Methods
 
 #### `#mouse`
