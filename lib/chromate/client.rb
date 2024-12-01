@@ -2,6 +2,7 @@
 
 require 'websocket-client-simple'
 require 'chromate/helpers'
+require 'chromate/exceptions'
 
 module Chromate
   class Client
@@ -132,12 +133,12 @@ module Chromate
                         else
                           create_new_page_target
                         end
-        raise DebugURLError, 'Can\'t get WebSocket URL' if websocket_url.nil?
+        raise Exceptions::DebugURLError, 'Can\'t get WebSocket URL' if websocket_url.nil?
 
         websocket_url
       rescue StandardError => e
         retries += 1
-        raise ConnectionTimeoutError, "Can't get WebSocket URL after #{max_retries} retries" if retries >= max_retries
+        raise Exceptions::ConnectionTimeoutError, "Can't get WebSocket URL after #{max_retries} retries" if retries >= max_retries
 
         delay = base_delay * (2**retries) # Exponential delay: 0.5s, 1s, 2s, 4s, 8s
         Chromate::CLogger.log("Attempting to reconnect in #{delay} seconds, #{e.message}", level: :debug)

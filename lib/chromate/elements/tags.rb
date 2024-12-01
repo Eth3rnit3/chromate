@@ -14,11 +14,11 @@ module Chromate
       end
 
       def radio?
-        tag_name == 'input' && property('type') == 'radio'
+        tag_name == 'input' && attributes['type'] == 'radio'
       end
 
       def checkbox?
-        tag_name == 'input' && property('type') == 'checkbox'
+        tag_name == 'input' && attributes['type'] == 'checkbox'
       end
 
       def base?

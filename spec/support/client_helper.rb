@@ -57,15 +57,6 @@ module Support
       allow(client).to receive(:send_message).with('DOM.focus', nodeId: node_id)
     end
 
-    def mock_element_property(client, object_id:, property:, value:)
-      allow(client).to receive(:send_message)
-        .with('Runtime.callFunctionOn',
-              hash_including(functionDeclaration: "function() { return this['#{property}']; }",
-                           objectId: object_id,
-                           returnByValue: true))
-        .and_return({ 'result' => { 'value' => value } })
-    end
-
     def mock_element_tag_name(client, object_id:, tag_name:)
       allow(client).to receive(:send_message)
         .with('Runtime.callFunctionOn',

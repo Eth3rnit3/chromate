@@ -15,17 +15,17 @@ RSpec.describe Chromate::Elements::Tags do
 
       attr_reader :tag_name
 
-      def property(name)
-        @properties[name]
+      def attributes
+        @attributes ||= {}
       end
 
       def tag!(name)
         @tag_name = name
       end
 
-      def set_property(name, value)
-        @properties ||= {}
-        @properties[name] = value
+      def set_attribute(name, value)
+        @attributes ||= {}
+        @attributes[name] = value
       end
     end
   end
@@ -73,7 +73,7 @@ RSpec.describe Chromate::Elements::Tags do
     context 'when element is a radio input' do
       before do
         element.tag!('input')
-        element.set_property('type', 'radio')
+        element.set_attribute('type', 'radio')
       end
 
       it 'returns true' do
@@ -84,7 +84,7 @@ RSpec.describe Chromate::Elements::Tags do
     context 'when element is not a radio input' do
       before do
         element.tag!('input')
-        element.set_property('type', 'text')
+        element.set_attribute('type', 'text')
       end
 
       it 'returns false' do
@@ -97,7 +97,7 @@ RSpec.describe Chromate::Elements::Tags do
     context 'when element is a checkbox input' do
       before do
         element.tag!('input')
-        element.set_property('type', 'checkbox')
+        element.set_attribute('type', 'checkbox')
       end
 
       it 'returns true' do
@@ -108,7 +108,7 @@ RSpec.describe Chromate::Elements::Tags do
     context 'when element is not a checkbox input' do
       before do
         element.tag!('input')
-        element.set_property('type', 'text')
+        element.set_attribute('type', 'text')
       end
 
       it 'returns false' do
@@ -140,7 +140,7 @@ RSpec.describe Chromate::Elements::Tags do
       context "when element is a #{name} input" do
         before do
           element.tag!('input')
-          element.set_property('type', type)
+          element.set_attribute('type', type)
         end
 
         it 'returns false' do
