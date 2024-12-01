@@ -11,11 +11,11 @@ module Chromate
       end
 
       def checkbox?
-        tag_name == 'input' && property('type') == 'checkbox'
+        tag_name == 'input' && attributes['type'] == 'checkbox'
       end
 
       def checked?
-        property('checked')
+        attributes['checked'] == 'true'
       end
 
       def check
