@@ -313,3 +313,16 @@ Gets the value of the element.
 
 - `NotFoundError`: Raised when an element cannot be found with the given selector.
 - `InvalidSelectorError`: Raised when the selector cannot resolve to a valid element.
+
+## Specialized Elements
+
+Chromate provides specialized element classes for specific HTML elements that have unique behaviors and methods. When using `find_element`, Chromate automatically returns the appropriate specialized element based on the element type.
+
+### Available Specialized Elements
+
+- [Select Element](elements/select.md): For `<select>` elements
+- [Option Element](elements/option.md): For `<option>` elements within select elements
+- [Radio Element](elements/radio.md): For radio button inputs (`<input type="radio">`)
+- [Checkbox Element](elements/checkbox.md): For checkbox inputs (`<input type="checkbox">`)
+
+Each specialized element inherits from the base `Element` class and adds specific methods for interacting with that type of element. See the individual documentation files for details on the methods available for each element type.
