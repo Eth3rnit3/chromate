@@ -87,13 +87,13 @@ module Chromate
 
     # @return [Boolean]
     def started?
-      @binary.started?
+      @binary&.started? || false
     end
 
     # @return [self]
     def stop
       stop_process(@record_process) if @record_process
-      @binary.stop                  if @binary&.started?
+      @binary.stop                  if started?
       @client&.stop
 
       @binary = nil
