@@ -42,7 +42,7 @@ module Chromate
     end
 
     def self.agents
-      @agents ||= JSON.parse(File.read(File.join(__dir__, 'agents.json')))
+      @agents ||= JSON.parse(File.read(File.join(__dir__, 'files/agents.json')))
     end
 
     def self.linux_agent
