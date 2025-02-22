@@ -142,6 +142,7 @@ module Chromate
     def build_args
       exclude_switches = config.exclude_switches || []
       exclude_switches += @options[:exclude_switches] if @options[:exclude_switches]
+      @user_agent = @options[:user_agent] || UserAgent.call
 
       @args = if @options.dig(:options, :args)
                 @options[:options][:args]
@@ -149,7 +150,7 @@ module Chromate
                 config.generate_arguments(**@options)
               end
 
-      @args << "--user-agent=#{@options[:user_agent] || UserAgent.call}"
+      @args << "--user-agent=#{@user_agent}"
       @args << "--exclude-switches=#{exclude_switches.join(",")}" if exclude_switches.any?
       @args << "--user-data-dir=#{@user_data_dir}"
 

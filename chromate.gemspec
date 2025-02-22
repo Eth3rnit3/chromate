@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_dependency 'ffi', '~> 1.17.0'
+  spec.add_dependency 'user_agent_parser', '~> 2.18.0'
   spec.add_dependency 'websocket-client-simple', '~> 0.8.0'
 
   # For more information and examples about making a new gem, check out our
