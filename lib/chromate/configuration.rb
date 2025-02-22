@@ -17,7 +17,6 @@ module Chromate
       '--no-sandbox', # Required for chrome devtools to work
       '--test-type', # Remove the not allowed message for --no-sandbox flag
       '--disable-dev-shm-usage', # Disable /dev/shm usage
-      '--disable-gpu', # Disable the GPU
       '--disable-popup-blocking', # Disable popup blocking
       '--ignore-certificate-errors', # Ignore certificate errors
       '--window-size=1920,1080', # TODO: Make this automatic
