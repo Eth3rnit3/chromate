@@ -8,7 +8,9 @@ module Chromate
         @client.send_message('Network.enable')
         inject_stealth_script
 
-        override_user_agent(@user_agent)
+        # TODO: Improve dynamic user agent overriding
+        # It currently breaks fingerprint validation (pixcelscan.com)
+        # override_user_agent(@user_agent)
       end
 
       # @return [void]
