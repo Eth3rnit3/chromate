@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'user_agent_parser'
 
 module Chromate
