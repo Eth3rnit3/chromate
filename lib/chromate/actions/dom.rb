@@ -39,7 +39,7 @@ module Chromate
 
         result['result']['value']
       rescue StandardError => e
-        Chromate::CLogger.log("Error evaluating script: #{e.message}", :error)
+        Chromate::CLogger.log("Error evaluating script: #{e.message}", level: :error)
         nil
       end
     end
